@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -26,14 +27,9 @@ public class ShopItem {
     private double price;
     private int amount;
     private int stars;
-    private String pictureUrl;
+    private String smallPictureUrl;
+    private String largePictureUrl;
+    private Date addedDate;
+    private boolean inTopPage;
 
-    public ShopItem(String name, String description, double price, int amount, int stars, String pictureUrl) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.amount = amount;
-        this.stars = stars;
-        this.pictureUrl = pictureUrl;
-    }
 }

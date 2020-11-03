@@ -5,25 +5,59 @@
             <div class="row mt-5 mb-5">
                 <div class="col">
                     <div class="card mt-2">
+                        <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.categories}">
+                        </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{sidebar.allItems}"><i
-                                    class="fas fa-address-card"></i></a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{sidebar.phones}"><i class="fas fa-cogs"></i>
+                            <li class="list-group-item"><i class="fas fa-shopping-cart mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.allItems}"></a></li>
+                            <li class="list-group-item"><i class="fas fa-mobile  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.phones}">
                                 </a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{sidebar.laptops}"><i
-                                    class="fas fa-sign-out-alt"></i></a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{sidebar.watches}"><i
-                                    class="fas fa-sign-out-alt"></i></a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{sidebar.televisions}"><i
-                                    class="fas fa-sign-out-alt"></i></a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{sidebar.gameConsoles}"><i
-                                    class="fas fa-sign-out-alt"></i></a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{sidebar.others}"><i
-                                    class="fas fa-sign-out-alt"></i></a></li>
+                            <li class="list-group-item"><i class="fas fa-laptop  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.laptops}"></a></li>
+<!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{sidebar.watches}"><i-->
+<!--                                    class="fas fa-sign-out-alt"></i></a></li>-->
+                            <li class="list-group-item"><i class="fas fa-tv  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.televisions}"></a></li>
+                            <li class="list-group-item"><i class="fas fa-gamepad  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.gameConsoles}"></a></li>
+                            <li class="list-group-item"><i class="fas fa-luggage-cart  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.others}"></a></li>
                         </ul>
+                    </div>
+                    <div class="card mt-2">
+                        <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.brands}">
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><a href="#" style="font-weight: bold;">Apple</a></li>
+                            <li class="list-group-item"><a href="#" style="font-weight: bold;">Samsung</a></li>
+                            <li class="list-group-item"><a href="#" style="font-weight: bold;">LG</a></li>
+                            <li class="list-group-item"><a href="#" style="font-weight: bold;">BOSCH</a></li>
+                            <li class="list-group-item"><a href="#" style="font-weight: bold;">ZEPTER</a></li>
+                            <li class="list-group-item"><a href="#" style="font-weight: bold;">XIAOMI</a></li>
+                            <li class="list-group-item"><a href="#" style="font-weight: bold;">NOKIA</a></li>
+                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{list.other}"></a></li>
+                        </ul>
+                    </div>
+                    <div class="card mt-2">
+                        <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.payments}">
+                        </div>
+                        <div class="card-body">
+                            <div class="row row-cols-3 m-0">
+                                <i class="fab fa-cc-visa fa-3x"></i>
+                                <i class="fab fa-cc-paypal fa-3x"></i>
+                                <i class="fab fa-cc-mastercard fa-3x"></i>
+                                <i class="fab fa-cc-apple-pay fa-3x"></i>
+                                <i class="fab fa-cc-amex fa-3x"></i>
+                                <i class="fab fa-cc-amazon-pay fa-3x"></i>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-9">
+                    <div class="row d-flex justify-content-between ml-auto mr-0" style="max-width: 802px;">
+                        <form class="form-inline w-100" th:action="@{'/search'}" method="get">
+                            <div class="form-group w-75 mr-4">
+                                <input type="text" class="form-control w-100" id="search" th:placeholder="#{label.search}">
+                            </div>
+                            <div class="form-group"><button class="btn btn-primary w-100" th:text="#{button.search}" style="background-color: #0b7e3e; color: white; font-weight: bold;"></button></div>
+                        </form>
+                    </div>
                     <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
                         <ol class="carousel-indicators">
                             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -50,24 +84,48 @@
                             <span class="sr-only">Next</span>
                         </a>
                     </div>
+                    <style>
+                        .description_cut p { /* Запрещаем перенос строк */
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            display: -webkit-box;
+                            -webkit-line-clamp: 3;
+                            -webkit-box-orient: vertical;
+
+                            /* Добавляем многоточие */
+                        }
+                        .name_cut a { /* Запрещаем перенос строк */
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            display: -webkit-box;
+                            -webkit-line-clamp: 1;
+                            -webkit-box-orient: vertical;
+
+                            /* Добавляем многоточие */
+                        }
+                    </style>
                     <div class="row row-cols-1 row-cols-md-3">
                         <div th:each="item : ${items}">
                             <div class="col mb-4">
                                 <div class="card" style="min-height: 393px; max-height: 393px;">
-                                    <img th:src="${item.pictureUrl}"
-                                         class="card-img-top" alt="..." style="max-height: 139px; max-width: 246px;">
+                                    <img th:src="${item.smallPictureUrl}"
+                                         class="card-img-top" alt="..." style="min-height:139px; max-height: 139px; max-width: 246px;">
                                     <div class="card-body">
-                                        <h5 class="card-title"><a href="#" style="font-weight: bold;" th:text="${item.name}"></a></h5>
+                                        <div class="name_cut">
+                                            <h5 class="card-title"><a th:href="@{'/item/' + ${item.id}}" style="font-weight: bold;" th:text="${item.name}"></a></h5>
+                                        </div>
                                         <h5 style="font-weight: bold;" th:text="'$' + ${item.price}"></h5>
-                                        <p class="card-text" th:text="${item.description}"></p>
+                                        <div class="description_cut">
+                                            <p class="card-text" th:text="${item.description}"></p>
+                                        </div>
                                     </div>
                                     <div class="card-footer">
                                         <div class="rating_star">
-                                            <input type="radio"  th:value="5" th:id="${item.id} + '5'" th:checked="${item.getStars()==5}"><label th:for="${item.id} + '5'" >☆</label>
-                                            <input type="radio"  th:value="4" th:id="${item.id} + '4'" th:checked="${item.getStars()==4}"><label th:for="${item.id} + '4'">☆</label>
-                                            <input type="radio"  th:value="3" th:id="${item.id} + '3'" th:checked="${item.getStars()==3}"><label th:for="${item.id} + '3'">☆</label>
-                                            <input type="radio"  th:value="2" th:id="${item.id} + '2'" th:checked="${item.getStars()==2}"><label th:for="${item.id} + '2'">☆</label>
-                                            <input type="radio"  th:value="1" th:id="${item.id} + '1'" th:checked="${item.getStars()==1}"><label th:for="${item.id} + '1'">☆</label>
+                                            <input type="radio"  th:value="5" th:id="${item.id} + '5'" th:checked="${item.getStars()==5}" disabled><label th:for="${item.id} + '5'" >☆</label>
+                                            <input type="radio"  th:value="4" th:id="${item.id} + '4'" th:checked="${item.getStars()==4}" disabled><label th:for="${item.id} + '4'">☆</label>
+                                            <input type="radio"  th:value="3" th:id="${item.id} + '3'" th:checked="${item.getStars()==3}" disabled><label th:for="${item.id} + '3'">☆</label>
+                                            <input type="radio"  th:value="2" th:id="${item.id} + '2'" th:checked="${item.getStars()==2}" disabled><label th:for="${item.id} + '2'">☆</label>
+                                            <input type="radio"  th:value="1" th:id="${item.id} + '1'" th:checked="${item.getStars()==1}" disabled><label th:for="${item.id} + '1'">☆</label>
                                         </div>
                                     </div>
                                 </div>
