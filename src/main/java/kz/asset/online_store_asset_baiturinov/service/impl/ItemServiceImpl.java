@@ -31,6 +31,31 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public ArrayList<ShopItem> getAllItemsByNameLikeOrderByPriceAsc(String name) {
+        return shopItemRepository.findAllByNameContainingOrderByPriceAsc(name);
+    }
+
+    @Override
+    public ArrayList<ShopItem> getAllItemsPriceBetweenAsc(double price1, double price2) {
+        return shopItemRepository.findAllByPriceBetweenOrderByPriceAsc(price1, price2);
+    }
+
+    @Override
+    public ArrayList<ShopItem> getAllItemsPriceBetweenDesc(double price1, double price2) {
+        return shopItemRepository.findAllByPriceBetweenOrderByPriceDesc(price1, price2);
+    }
+
+    @Override
+    public ArrayList<ShopItem> getAllItemsByNameLikeAndPriceBetweenAsc(String name, double price1, double price2) {
+        return shopItemRepository.findAllByNameContainingAndPriceBetweenOrderByPriceAsc(name, price1, price2);
+    }
+
+    @Override
+    public ArrayList<ShopItem> getAllItemsByNameLikeAndPriceBetweenDesc(String name, double price1, double price2) {
+        return shopItemRepository.findAllByNameContainingAndPriceBetweenOrderByPriceDesc(name, price1, price2);
+    }
+
+    @Override
     public ShopItem getItem(Long id) {
         return shopItemRepository.getOne(id);
     }

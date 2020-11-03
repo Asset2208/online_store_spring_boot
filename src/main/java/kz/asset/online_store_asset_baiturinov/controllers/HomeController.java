@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 
 @Controller
 public class HomeController {
@@ -19,12 +20,17 @@ public class HomeController {
     private ItemService itemService;
 
     @GetMapping("/")
-    public String home(Model model, @CookieValue(value = "language", defaultValue = "ru") String language) {
+    public String home(Model model) {
         Iterable<ShopItem> items = itemService.getAllItems();
         model.addAttribute("items", items);
-        model.addAttribute("language", language);
         return "index";
     }
 
+    @GetMapping("/top")
+    public String top(Model model) {
+        ArrayList<ShopItem> items = itemService.getAllItemsInTop();
+        model.addAttribute("items", items);
+        return "index";
+    }
 
 }

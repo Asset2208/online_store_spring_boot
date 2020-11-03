@@ -17,11 +17,14 @@
                         <a class="dropdown-item" href="?lng=kz">QAZ</a>
                     </div>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#" th:text="#{navbar.login}"><span class="sr-only">(current)</span></a>
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="#" th:text="#{navbar.login}"></a>-->
+<!--                </li>-->
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/top'}" th:text="#{navbar.top}"></a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" th:href="@{'/add'}" th:text="#{navbar.addItem}"><span class="sr-only">(current)</span></a>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/add'}" th:text="#{navbar.addItem}"></a>
                 </li>
             </ul>
         </div>

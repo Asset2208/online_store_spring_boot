@@ -13,5 +13,9 @@ public interface ItemService {
     void deleteItem(ShopItem item);
     ShopItem saveItem(ShopItem item);
     ArrayList<ShopItem> getAllItemsInTop();
-
+    ArrayList<ShopItem> getAllItemsByNameLikeOrderByPriceAsc(String name);
+    ArrayList<ShopItem> getAllItemsPriceBetweenAsc(double price1, double price2);
+    ArrayList<ShopItem> getAllItemsPriceBetweenDesc(double price1, double price2);
+    ArrayList<ShopItem> getAllItemsByNameLikeAndPriceBetweenAsc(String name, double price1, double price2);
+    ArrayList<ShopItem> getAllItemsByNameLikeAndPriceBetweenDesc(String name, double price1, double price2);
 }
