@@ -23,14 +23,15 @@
                     <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.brands}">
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a href="#" style="font-weight: bold;">Apple</a></li>
-                        <li class="list-group-item"><a href="#" style="font-weight: bold;">Samsung</a></li>
-                        <li class="list-group-item"><a href="#" style="font-weight: bold;">LG</a></li>
-                        <li class="list-group-item"><a href="#" style="font-weight: bold;">BOSCH</a></li>
-                        <li class="list-group-item"><a href="#" style="font-weight: bold;">ZEPTER</a></li>
-                        <li class="list-group-item"><a href="#" style="font-weight: bold;">XIAOMI</a></li>
-                        <li class="list-group-item"><a href="#" style="font-weight: bold;">NOKIA</a></li>
-                        <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{list.other}"></a></li>
+                        <li class="list-group-item" th:each="brand_nav : ${brands}"><a th:href="@{'/searchbrand/' + ${brand_nav.id}}" style="font-weight: bold;" th:text="${brand_nav.name}"></a></li>
+<!--                        <li class="list-group-item"><a href="#" style="font-weight: bold;">Apple</a></li>-->
+<!--                        <li class="list-group-item"><a href="#" style="font-weight: bold;">Samsung</a></li>-->
+<!--                        <li class="list-group-item"><a href="#" style="font-weight: bold;">LG</a></li>-->
+<!--                        <li class="list-group-item"><a href="#" style="font-weight: bold;">BOSCH</a></li>-->
+<!--                        <li class="list-group-item"><a href="#" style="font-weight: bold;">ZEPTER</a></li>-->
+<!--                        <li class="list-group-item"><a href="#" style="font-weight: bold;">XIAOMI</a></li>-->
+<!--                        <li class="list-group-item"><a href="#" style="font-weight: bold;">NOKIA</a></li>-->
+<!--                        <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{list.other}"></a></li>-->
                     </ul>
                 </div>
                 <div class="card mt-2">
@@ -50,17 +51,23 @@
                 </div>
             </div>
             <div class="col-9">
-                <div class="row d-flex justify-content-between ml-auto mr-0 mb-3" style="max-width: 802px;">
-                    <form class="form-inline w-100" th:action="@{'/price'}" method="get">
-                        <div class="form-group w-25 mr-4">
+                <div class="form-group row d-flex justify-content-between ml-0 mr-0 mb-3" style="max-width: 802px;">
+                    <form class="form-inline" th:action="@{'/price'}" method="get">
+                        <div class="form-group col-4 mr-1 pl-0">
                             <label for="search_name" th:text="#{label.search_name}"></label>
                             <input type="text" class="form-control w-100" id="search_name" name="search_result" th:value="${search_item}">
                         </div>
-                        <div class="form-group w-25 mr-4">
+                        <div class="form-group col-2 mr-1 pl-0">
+                            <label for="brand_search" th:text="#{label.brands}"></label>
+                            <select class="form-control w-100" id="brand_search" name="brand_search">
+                                <option th:each="brand : ${brands}" th:text="${brand.name}" th:value="${brand.id}" th:selected="${brand_result} == ${brand.id}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group col-2 mr-1 pl-0">
                             <label for="price_from" th:text="#{label.price_from}"></label>
                             <input type="number" step="0.01" id="price_from" class="form-control w-100" name="price_from">
                         </div>
-                        <div class="form-group w-25 mr-4">
+                        <div class="form-group col-2 mr-1 pl-0">
                             <label for="price_to" th:text="#{label.price_to}"></label>
                             <input type="number" step="0.01" id="price_to" class="form-control w-100" name="price_to">
                         </div>
@@ -76,12 +83,14 @@
                                 <input type="hidden" name="search_result" th:value="${search_item}">
                                 <input type="hidden" name="price_from" th:value="${price_from_searched}">
                                 <input type="hidden" name="price_to" th:value="${price_to_searched}">
+                                <input type="hidden" name="brand_search" th:value="${brand_result}">
                                 <button class="btn btn-secondary" th:text="#{search.ascending}"></button>
                             </form>
                             <form th:action="@{'/sortdesc'}" method="get">
                                 <input type="hidden" name="search_result" th:value="${search_item}">
                                 <input type="hidden" name="price_from" th:value="${price_from_searched}">
                                 <input type="hidden" name="price_to" th:value="${price_to_searched}">
+                                <input type="hidden" name="brand_search" th:value="${brand_result}">
                                 <button class="btn btn-secondary" th:text="#{search.descending}"></button>
                             </form>
                         </div>
@@ -125,7 +134,7 @@
                 <div class="row row-cols-1 row-cols-md-3">
                     <div th:each="item : ${items}">
                         <div class="col mb-4">
-                            <div class="card" style="min-height: 393px; max-height: 393px;">
+                            <div class="card" style="min-height: 440px; max-height: 440px;">
                                 <img th:src="${item.smallPictureUrl}"
                                      class="card-img-top" alt="..." style="min-height:139px; max-height: 139px; max-width: 246px;">
                                 <div class="card-body">
@@ -136,6 +145,10 @@
                                     <div class="description_cut">
                                         <p class="card-text" th:text="${item.description}"></p>
                                     </div>
+                                    <ul class="list-inline mt-3">
+                                        <li class="list-inline-item"><h6 style="font-weight: bold;" th:text="#{h5.brand}" class="card-text"></h6></li>
+                                        <li class="list-inline-item"><h6><a th:href="@{'/searchbrand/' + ${item.brand.id}}" class="card-link" style="font-weight: bold;" th:text="${item.brand.name} + ', ' + ${item.brand.country.code}"></a></h6></li>
+                                    </ul>
                                 </div>
                                 <div class="card-footer">
                                     <div class="rating_star">

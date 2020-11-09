@@ -23,14 +23,14 @@
                         <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.brands}">
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;">Apple</a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;">Samsung</a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;">LG</a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;">BOSCH</a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;">ZEPTER</a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;">XIAOMI</a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;">NOKIA</a></li>
-                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{list.other}"></a></li>
+                            <li class="list-group-item" th:each="brand_nav : ${brands}"><a th:href="@{'/searchbrand/' + ${brand_nav.id}}" style="font-weight: bold;" th:text="${brand_nav.name}"></a></li>
+<!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;">Samsung</a></li>-->
+<!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;">LG</a></li>-->
+<!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;">BOSCH</a></li>-->
+<!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;">ZEPTER</a></li>-->
+<!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;">XIAOMI</a></li>-->
+<!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;">NOKIA</a></li>-->
+<!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{list.other}"></a></li>-->
                         </ul>
                     </div>
                     <div class="card mt-2">
@@ -107,9 +107,9 @@
                     <div class="row row-cols-1 row-cols-md-3">
                         <div th:each="item : ${items}">
                             <div class="col mb-4">
-                                <div class="card" style="min-height: 393px; max-height: 393px;">
+                                <div class="card" style="min-height: 440px; max-height: 440px;">
                                     <img th:src="${item.smallPictureUrl}"
-                                         class="card-img-top" alt="..." style="min-height:139px; max-height: 139px; max-width: 246px;">
+                                         class="card-img-top" alt="..." style="min-height:139px; max-height: 139px;">
                                     <div class="card-body">
                                         <div class="name_cut">
                                             <h5 class="card-title"><a th:href="@{'/item/' + ${item.id}}" style="font-weight: bold;" th:text="${item.name}"></a></h5>
@@ -118,6 +118,10 @@
                                         <div class="description_cut">
                                             <p class="card-text" th:text="${item.description}"></p>
                                         </div>
+                                        <ul class="list-inline mt-3">
+                                            <li class="list-inline-item"><h6 style="font-weight: bold;" th:text="#{h5.brand}" class="card-text"></h6></li>
+                                            <li class="list-inline-item"><h6><a th:href="@{'/searchbrand/' + ${item.brand.id}}" class="card-link" style="font-weight: bold;" th:text="${item.brand.name} + ', ' + ${item.brand.country.code}"></a></h6></li>
+                                        </ul>
                                     </div>
                                     <div class="card-footer">
                                         <div class="rating_star">

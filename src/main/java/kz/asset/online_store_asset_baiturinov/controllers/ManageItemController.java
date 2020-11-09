@@ -1,5 +1,7 @@
 package kz.asset.online_store_asset_baiturinov.controllers;
 
+import kz.asset.online_store_asset_baiturinov.models.Brands;
+import kz.asset.online_store_asset_baiturinov.models.Countries;
 import kz.asset.online_store_asset_baiturinov.models.ShopItem;
 import kz.asset.online_store_asset_baiturinov.repo.ShopItemRepository;
 import kz.asset.online_store_asset_baiturinov.service.ItemService;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
+import java.util.List;
 
 @Controller
 public class ManageItemController {
@@ -20,7 +23,10 @@ public class ManageItemController {
     private ItemService itemService;
 
     @GetMapping("/add")
-    public String add(){
+    public String add(Model model)
+    {
+        List<Brands> brands = itemService.getAllBrands();
+        model.addAttribute("brands", brands);
         return "addItem";
     }
 
@@ -33,10 +39,15 @@ public class ManageItemController {
                           @RequestParam(name = "rating") int rating,
                           @RequestParam(name = "small_picture_url") String small_picture_url,
                           @RequestParam(name = "large_picture_url") String large_picture_url,
-                          @RequestParam(name = "in_top") boolean in_top){
-
-        Date added_date = new Date(System.currentTimeMillis());
-        itemService.addItem(new ShopItem(null, name, description, price, amount, rating, small_picture_url, large_picture_url, added_date, in_top));
+                          @RequestParam(name = "in_top") boolean in_top,
+                          @RequestParam(name = "brand") Long brand_id){
+        Brands brand = itemService.getBrand(brand_id);
+        if (brand != null) {
+            Date added_date = new Date(System.currentTimeMillis());
+            itemService.addItem(new ShopItem(null, name, description, price, amount, rating, small_picture_url, large_picture_url, added_date, in_top, brand));
+        }
+        List<Brands> brands = itemService.getAllBrands();
+        model.addAttribute("brands", brands);
         return "redirect:/";
     }
 
@@ -50,10 +61,12 @@ public class ManageItemController {
                           @RequestParam(name = "rating") int rating,
                           @RequestParam(name = "small_picture_url") String small_picture_url,
                           @RequestParam(name = "large_picture_url") String large_picture_url,
-                          @RequestParam(name = "in_top") boolean in_top){
+                          @RequestParam(name = "in_top") boolean in_top,
+                           @RequestParam(name = "brand") Long brand_id){
 
+        Brands brand = itemService.getBrand(brand_id);
         ShopItem item = itemService.getItem(id);
-        if (item != null) {
+        if (item != null && brand != null) {
             item.setName(name);
             item.setDescription(description);
             item.setPrice(price);
@@ -62,8 +75,11 @@ public class ManageItemController {
             item.setSmallPictureUrl(small_picture_url);
             item.setLargePictureUrl(large_picture_url);
             item.setInTopPage(in_top);
+            item.setBrand(brand);
             itemService.saveItem(item);
         }
+        List<Brands> brands = itemService.getAllBrands();
+        model.addAttribute("brands", brands);
         return "redirect:/";
     }
 
@@ -72,15 +88,21 @@ public class ManageItemController {
                           @PathVariable(name = "Id") Long id){
         ShopItem item = itemService.getItem(id);
         model.addAttribute("item", item);
+
+        List<Brands> brands = itemService.getAllBrands();
+        model.addAttribute("brands", brands);
+
         return "details";
     }
 
     @PostMapping("/delete")
-    public String deleteItem(@RequestParam(name = "id") Long id){
+    public String deleteItem(@RequestParam(name = "id") Long id, Model model){
         ShopItem item = itemService.getItem(id);
         if (item != null) {
             itemService.deleteItem(item);
         }
+        List<Brands> brands = itemService.getAllBrands();
+        model.addAttribute("brands", brands);
         return "redirect:/";
     }
 

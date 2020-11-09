@@ -15,8 +15,9 @@ public interface ShopItemRepository extends JpaRepository<ShopItem, Long> {
     ArrayList<ShopItem> findByName(String name);
     ArrayList<ShopItem> findAllByInTopPageIsTrue();
     ArrayList<ShopItem> findAllByNameContainingOrderByPriceAsc(String name);
-    ArrayList<ShopItem> findAllByPriceBetweenOrderByPriceAsc(double price1, double price2);
-    ArrayList<ShopItem> findAllByPriceBetweenOrderByPriceDesc(double price1, double price2);
-    ArrayList<ShopItem> findAllByNameContainingAndPriceBetweenOrderByPriceAsc(String name, double price1, double price2);
-    ArrayList<ShopItem> findAllByNameContainingAndPriceBetweenOrderByPriceDesc(String name, double price1, double price2);
+    ArrayList<ShopItem> findAllByBrandIdAndPriceBetweenOrderByPriceAsc(Long id, double price1, double price2);
+    ArrayList<ShopItem> findAllByBrandIdAndPriceBetweenOrderByPriceDesc(Long id, double price1, double price2);
+    ArrayList<ShopItem> findAllByNameContainingAndBrandIdAndPriceBetweenOrderByPriceAsc(String name, Long id, double price1, double price2);
+    ArrayList<ShopItem> findAllByNameContainingAndBrandIdAndPriceBetweenOrderByPriceDesc(String name, Long id, double price1, double price2);
+    ArrayList<ShopItem> findAllByBrandId(Long id);
 }
