@@ -121,7 +121,7 @@ public class SearchController {
         model.addAttribute("price_to_searched", price_to);
         model.addAttribute("items", shopItems);
 
-        model.addAttribute("brand_result", 0);
+        model.addAttribute("brand_result", brand_id);
 
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);

@@ -111,6 +111,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public Countries getCountryByName(String name) {
+        return countriesRepository.findByName(name);
+    }
+
+    @Override
     public Brands addBrand(Brands brand) {
         return brandsRepository.save(brand);
     }

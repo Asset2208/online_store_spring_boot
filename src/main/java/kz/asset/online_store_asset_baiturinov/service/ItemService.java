@@ -27,6 +27,7 @@ public interface ItemService {
     Countries getCountry(Long id);
     void deleteCountry(Countries country);
     Countries saveCountry(Countries country);
+    Countries getCountryByName(String name);
 
     Brands addBrand(Brands brand);
     List<Brands> getAllBrands();

@@ -24,6 +24,35 @@ public class ManageCountriesController {
                              @RequestParam(name = "code") String code){
         Countries country = new Countries(null, name, code);
         itemService.addCountry(country);
-        return "redirect:/";
+        return "redirect:/admin_countries";
+    }
+
+    @PostMapping("/editCountry")
+    public String editCountry(@RequestParam(name = "country_id") Long country_id,
+                                @RequestParam(name = "name") String name,
+                             @RequestParam(name = "code") String code){
+        Countries country_initial = itemService.getCountry(country_id);
+        Countries country = itemService.getCountryByName(name);
+
+        if (country_initial != null) {
+            country_initial.setCode(code);
+            if (country == null){
+                country_initial.setName(name);
+            }
+            itemService.saveCountry(country_initial);
+        }
+
+        return "redirect:/admin_countries";
+    }
+
+    @PostMapping("/deleteCountry")
+    public String deleteCountry(@RequestParam(name = "country_id") Long country_id){
+        Countries country_initial = itemService.getCountry(country_id);
+
+        if (country_initial != null) {
+            itemService.deleteCountry(country_initial);
+        }
+
+        return "redirect:/admin_countries";
     }
 }
