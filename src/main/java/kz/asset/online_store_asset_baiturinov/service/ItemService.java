@@ -33,5 +33,6 @@ public interface ItemService {
     Brands getBrand(Long id);
     void deleteBrand(Brands brand);
     Brands saveBrand(Brands brand);
+    Brands getBrandByName(String name);
 
 }

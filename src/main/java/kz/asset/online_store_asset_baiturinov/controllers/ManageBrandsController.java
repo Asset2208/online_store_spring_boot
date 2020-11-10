@@ -30,8 +30,8 @@ public class ManageBrandsController {
     public String addBrand(@RequestParam(name = "name") String name,
                            @RequestParam(name = "country") Long country_id){
         Countries country = itemService.getCountry(country_id);
-
-        if (country != null) {
+        Brands brand = itemService.getBrandByName(name);
+        if (country != null && brand == null) {
             itemService.addBrand(new Brands(null, name, country));
         }
 

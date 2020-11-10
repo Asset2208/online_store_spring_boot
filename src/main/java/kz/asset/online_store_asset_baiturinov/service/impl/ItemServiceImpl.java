@@ -135,4 +135,9 @@ public class ItemServiceImpl implements ItemService {
         return brandsRepository.save(brand);
     }
 
+    @Override
+    public Brands getBrandByName(String name) {
+        return brandsRepository.findByName(name);
+    }
+
 }
