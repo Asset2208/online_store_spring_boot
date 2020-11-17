@@ -26,6 +26,9 @@
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{'/admin_items'}" th:text="#{admin.items}"></a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/admin_categories'}" th:text="#{topic.categories}"></a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -86,7 +89,7 @@
                         <td th:text="${brand.country.name}"></td>
                         <td class="d-flex">
 
-                            <button type="button" class="btn btn-primary" style="font-weight: bold;" data-toggle="modal" th:attr="data-target='#edit' + ${brand.id}" th:text="#{button.edit}">
+                            <button type="button" class="btn btn-primary" style="font-weight: bold;" data-toggle="modal" th:attr="data-target='#edit' + ${brand.id}"><i class="fas fa-edit"></i>
                             </button>
 
                             <div class="modal fade" th:id="'edit' + ${brand.id}" tabindex="-1" th:attr="aria-labelledby='edit' + ${brand.id} + 'Label'" aria-hidden="true">

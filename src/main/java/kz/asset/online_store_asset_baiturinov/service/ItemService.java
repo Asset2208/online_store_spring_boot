@@ -1,6 +1,7 @@
 package kz.asset.online_store_asset_baiturinov.service;
 
 import kz.asset.online_store_asset_baiturinov.models.Brands;
+import kz.asset.online_store_asset_baiturinov.models.Categories;
 import kz.asset.online_store_asset_baiturinov.models.Countries;
 import kz.asset.online_store_asset_baiturinov.models.ShopItem;
 
@@ -35,5 +36,13 @@ public interface ItemService {
     void deleteBrand(Brands brand);
     Brands saveBrand(Brands brand);
     Brands getBrandByName(String name);
+
+    Categories addCategory(Categories category);
+    List<Categories> getAllCategories();
+    Categories getCategory(Long id);
+    void deleteCategory(Categories category);
+    Categories saveCategory(Categories category);
+    Categories getCategoryByName(String name);
+//    List<Categories> getAllCategoriesNotIn(List<Categories> categories);
 
 }

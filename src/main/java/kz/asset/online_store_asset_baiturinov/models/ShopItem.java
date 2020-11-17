@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,5 +32,8 @@ public class ShopItem {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Brands brand;
+
+    @ManyToMany
+    private List<Categories> categories;
 
 }

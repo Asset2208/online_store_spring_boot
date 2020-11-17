@@ -1,9 +1,11 @@
 package kz.asset.online_store_asset_baiturinov.service.impl;
 
 import kz.asset.online_store_asset_baiturinov.models.Brands;
+import kz.asset.online_store_asset_baiturinov.models.Categories;
 import kz.asset.online_store_asset_baiturinov.models.Countries;
 import kz.asset.online_store_asset_baiturinov.models.ShopItem;
 import kz.asset.online_store_asset_baiturinov.repo.BrandsRepository;
+import kz.asset.online_store_asset_baiturinov.repo.CategoryRepository;
 import kz.asset.online_store_asset_baiturinov.repo.CountriesRepository;
 import kz.asset.online_store_asset_baiturinov.repo.ShopItemRepository;
 import kz.asset.online_store_asset_baiturinov.service.ItemService;
@@ -24,6 +26,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private BrandsRepository brandsRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Override
     public ShopItem addItem(ShopItem item) {
@@ -144,5 +149,36 @@ public class ItemServiceImpl implements ItemService {
     public Brands getBrandByName(String name) {
         return brandsRepository.findByName(name);
     }
+
+    @Override
+    public Categories addCategory(Categories category) {
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public List<Categories> getAllCategories() {
+        return categoryRepository.findAll();
+    }
+
+    @Override
+    public Categories getCategory(Long id) {
+        return categoryRepository.getOne(id);
+    }
+
+    @Override
+    public void deleteCategory(Categories category) {
+        categoryRepository.delete(category);
+    }
+
+    @Override
+    public Categories saveCategory(Categories category) {
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public Categories getCategoryByName(String name) {
+        return categoryRepository.findByName(name);
+    }
+
 
 }

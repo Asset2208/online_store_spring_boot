@@ -1,6 +1,7 @@
 package kz.asset.online_store_asset_baiturinov.controllers;
 
 import kz.asset.online_store_asset_baiturinov.models.Brands;
+import kz.asset.online_store_asset_baiturinov.models.Categories;
 import kz.asset.online_store_asset_baiturinov.models.Countries;
 import kz.asset.online_store_asset_baiturinov.models.ShopItem;
 import kz.asset.online_store_asset_baiturinov.repo.ShopItemRepository;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -44,11 +46,22 @@ public class ManageItemController {
         Brands brand = itemService.getBrand(brand_id);
         if (brand != null) {
             Date added_date = new Date(System.currentTimeMillis());
-            itemService.addItem(new ShopItem(null, name, description, price, amount, rating, small_picture_url, large_picture_url, added_date, in_top, brand));
+            ShopItem item = new ShopItem();
+            item.setName(name);
+            item.setDescription(description);
+            item.setPrice(price);
+            item.setAmount(amount);
+            item.setStars(rating);
+            item.setSmallPictureUrl(small_picture_url);
+            item.setLargePictureUrl(large_picture_url);
+            item.setInTopPage(in_top);
+            item.setBrand(brand);
+            item.setAddedDate(added_date);
+            itemService.addItem(item);
         }
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
-        return "redirect:/";
+        return "redirect:/admin_items";
     }
 
     @PostMapping("/saveItem")
@@ -80,7 +93,7 @@ public class ManageItemController {
         }
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
-        return "redirect:/";
+        return "redirect:/admin_items";
     }
 
     @GetMapping("/item/{Id}")
@@ -103,7 +116,44 @@ public class ManageItemController {
         }
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
-        return "redirect:/";
+        return "redirect:/admin_items";
+    }
+
+    @PostMapping("/assigncategory")
+    public String assignCategory(Model model, @RequestParam(name = "item_id") Long item_id,
+                                 @RequestParam(name = "category_id") Long category_id){
+        Categories cat = itemService.getCategory(category_id);
+        if (cat != null){
+            ShopItem item = itemService.getItem(item_id);
+            if (item != null) {
+                List<Categories> categories = item.getCategories();
+                if (categories == null) {
+                    categories = new ArrayList<>();
+                }
+                categories.add(cat);
+
+                itemService.saveItem(item);
+                return "redirect:/admin_items/" + item_id;
+            }
+        }
+        return "redirect:/admin_items";
+    }
+
+    @PostMapping("/declinecategory")
+    public String declinecategory(Model model, @RequestParam(name = "item_id") Long item_id,
+                                 @RequestParam(name = "category_id") Long category_id){
+        Categories cat = itemService.getCategory(category_id);
+        if (cat != null){
+            ShopItem item = itemService.getItem(item_id);
+            if (item != null) {
+                List<Categories> categories = item.getCategories();
+                categories.remove(cat);
+
+                itemService.saveItem(item);
+                return "redirect:/admin_items/" + item_id;
+            }
+        }
+        return "redirect:/admin_items";
     }
 
 }
