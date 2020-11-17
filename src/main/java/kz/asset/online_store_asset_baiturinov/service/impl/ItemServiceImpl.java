@@ -76,6 +76,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public ArrayList<ShopItem> getAllItemsByCategoryId(Long id) {
+        return shopItemRepository.findAllByCategoriesId(id);
+    }
+
+    @Override
     public ShopItem getItem(Long id) {
         return shopItemRepository.getOne(id);
     }

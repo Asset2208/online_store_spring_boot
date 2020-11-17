@@ -20,4 +20,5 @@ public interface ShopItemRepository extends JpaRepository<ShopItem, Long> {
     ArrayList<ShopItem> findAllByNameContainingAndBrandIdAndPriceBetweenOrderByPriceAsc(String name, Long id, double price1, double price2);
     ArrayList<ShopItem> findAllByNameContainingAndBrandIdAndPriceBetweenOrderByPriceDesc(String name, Long id, double price1, double price2);
     ArrayList<ShopItem> findAllByBrandId(Long id);
+    ArrayList<ShopItem> findAllByCategoriesId(Long id);
 }

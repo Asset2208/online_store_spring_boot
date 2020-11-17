@@ -144,4 +144,26 @@ public class SearchController {
 
         return "search";
     }
+
+    @GetMapping("/searchcategory/{Id}")
+    public String categorySearch(Model model, @PathVariable(name = "Id") Long id){
+        if (id != null){
+            ArrayList<ShopItem> shopItems = itemService.getAllItemsByCategoryId(id);
+            model.addAttribute("items", shopItems);
+
+            model.addAttribute("brand_result", 0);
+
+            List<Brands> brands = itemService.getAllBrands();
+            model.addAttribute("brands", brands);
+
+            List<Categories> categories = itemService.getAllCategories();
+            model.addAttribute("categories", categories);
+
+            return "search";
+        }
+        else {
+            return "redirect:/";
+        }
+
+    }
 }

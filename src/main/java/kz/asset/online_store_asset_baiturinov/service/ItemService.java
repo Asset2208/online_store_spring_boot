@@ -22,6 +22,7 @@ public interface ItemService {
     ArrayList<ShopItem> getAllItemsByNameLikeAndBrandIdAndPriceBetweenAsc(String name, Long id, double price1, double price2);
     ArrayList<ShopItem> getAllItemsByNameLikeAndBrandIdAndPriceBetweenDesc(String name, Long id, double price1, double price2);
     ArrayList<ShopItem> getAllItemsByBrandId(Long id);
+    ArrayList<ShopItem> getAllItemsByCategoryId(Long id);
 
     Countries addCountry(Countries country);
     List<Countries> getAllCountries();
