@@ -1,6 +1,7 @@
 package kz.asset.online_store_asset_baiturinov.controllers;
 
 import kz.asset.online_store_asset_baiturinov.models.Brands;
+import kz.asset.online_store_asset_baiturinov.models.Categories;
 import kz.asset.online_store_asset_baiturinov.models.ShopItem;
 import kz.asset.online_store_asset_baiturinov.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class SearchController {
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
 
+        List<Categories> categories = itemService.getAllCategories();
+        model.addAttribute("categories", categories);
+
         return "search";
     }
 
@@ -45,6 +49,9 @@ public class SearchController {
 
             List<Brands> brands = itemService.getAllBrands();
             model.addAttribute("brands", brands);
+
+            List<Categories> categories = itemService.getAllCategories();
+            model.addAttribute("categories", categories);
 
             return "search";
         }
@@ -76,6 +83,9 @@ public class SearchController {
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
 
+        List<Categories> categories = itemService.getAllCategories();
+        model.addAttribute("categories", categories);
+
         return "search";
     }
 
@@ -101,6 +111,9 @@ public class SearchController {
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
 
+        List<Categories> categories = itemService.getAllCategories();
+        model.addAttribute("categories", categories);
+
         return "search";
     }
 
@@ -125,6 +138,9 @@ public class SearchController {
 
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
+
+        List<Categories> categories = itemService.getAllCategories();
+        model.addAttribute("categories", categories);
 
         return "search";
     }

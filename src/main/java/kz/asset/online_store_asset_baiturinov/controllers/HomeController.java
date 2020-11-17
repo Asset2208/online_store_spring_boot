@@ -1,6 +1,7 @@
 package kz.asset.online_store_asset_baiturinov.controllers;
 
 import kz.asset.online_store_asset_baiturinov.models.Brands;
+import kz.asset.online_store_asset_baiturinov.models.Categories;
 import kz.asset.online_store_asset_baiturinov.models.ShopItem;
 import kz.asset.online_store_asset_baiturinov.repo.ShopItemRepository;
 import kz.asset.online_store_asset_baiturinov.service.ItemService;
@@ -29,6 +30,9 @@ public class HomeController {
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
 
+        List<Categories> categories = itemService.getAllCategories();
+        model.addAttribute("categories", categories);
+
         return "index";
     }
 
@@ -39,6 +43,9 @@ public class HomeController {
 
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
+
+        List<Categories> categories = itemService.getAllCategories();
+        model.addAttribute("categories", categories);
 
         return "index";
     }

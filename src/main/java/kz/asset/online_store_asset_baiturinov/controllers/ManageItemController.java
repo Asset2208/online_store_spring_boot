@@ -42,7 +42,8 @@ public class ManageItemController {
                           @RequestParam(name = "small_picture_url") String small_picture_url,
                           @RequestParam(name = "large_picture_url") String large_picture_url,
                           @RequestParam(name = "in_top") boolean in_top,
-                          @RequestParam(name = "brand") Long brand_id){
+                          @RequestParam(name = "brand") Long brand_id,
+                          @RequestParam(name = "categories") List<Long> categoriesId){
         Brands brand = itemService.getBrand(brand_id);
         if (brand != null) {
             Date added_date = new Date(System.currentTimeMillis());
@@ -57,6 +58,11 @@ public class ManageItemController {
             item.setInTopPage(in_top);
             item.setBrand(brand);
             item.setAddedDate(added_date);
+            ArrayList<Categories> categories = new ArrayList<>();
+            for (Long category : categoriesId){
+                categories.add(itemService.getCategory(category));
+            }
+            item.setCategories(categories);
             itemService.addItem(item);
         }
         List<Brands> brands = itemService.getAllBrands();

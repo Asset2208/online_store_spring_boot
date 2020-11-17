@@ -47,6 +47,9 @@ public class AdminController {
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
 
+        List<Categories> categories = itemService.getAllCategories();
+        model.addAttribute("categories", categories);
+
         return "admin_items";
     }
 

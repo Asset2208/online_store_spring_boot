@@ -8,15 +8,15 @@
                         <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.categories}">
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><i class="fas fa-shopping-cart mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.allItems}"></a></li>
-                            <li class="list-group-item"><i class="fas fa-mobile  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.phones}">
-                                </a></li>
-                            <li class="list-group-item"><i class="fas fa-laptop  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.laptops}"></a></li>
-<!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{sidebar.watches}"><i-->
-<!--                                    class="fas fa-sign-out-alt"></i></a></li>-->
-                            <li class="list-group-item"><i class="fas fa-tv  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.televisions}"></a></li>
-                            <li class="list-group-item"><i class="fas fa-gamepad  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.gameConsoles}"></a></li>
-                            <li class="list-group-item"><i class="fas fa-luggage-cart  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.others}"></a></li>
+                            <li class="list-group-item" th:each="category : ${categories}"><img th:src="${category.logoURL}" style="min-height: 20px; max-width: 20px;"> <a th:href="@{'/searchcategory/' + ${category.id}}" style="font-weight: bold;" th:text="${category.name}"></a></li>
+<!--                            <li class="list-group-item"><i class="fas fa-mobile  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.phones}">-->
+<!--                                </a></li>-->
+<!--                            <li class="list-group-item"><i class="fas fa-laptop  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.laptops}"></a></li>-->
+<!--&lt;!&ndash;                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{sidebar.watches}"><i&ndash;&gt;-->
+<!--&lt;!&ndash;                                    class="fas fa-sign-out-alt"></i></a></li>&ndash;&gt;-->
+<!--                            <li class="list-group-item"><i class="fas fa-tv  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.televisions}"></a></li>-->
+<!--                            <li class="list-group-item"><i class="fas fa-gamepad  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.gameConsoles}"></a></li>-->
+<!--                            <li class="list-group-item"><i class="fas fa-luggage-cart  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.others}"></a></li>-->
                         </ul>
                     </div>
                     <div class="card mt-2">
