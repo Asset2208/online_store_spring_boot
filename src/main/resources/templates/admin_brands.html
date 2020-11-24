@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main_admin.html">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main_admin.html" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div layout:fragment="admin_page_content">
     <style>
         .sidebar-sticky {
@@ -17,6 +17,12 @@
                 <h5 th:text="#{h5.adminpanel}"></h5>
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column">
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a class="nav-link" th:href="@{'/admin_users'}" th:text="#{admin.users}"></a>
+                        </li>
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a class="nav-link" th:href="@{'/admin_roles'}" th:text="#{admin.roles}"></a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" th:href="@{'/admin'}" th:text="#{admin.brands}"></a>
                         </li>

@@ -111,4 +111,26 @@ public class AdminController {
 
         return "admin_categories";
     }
+
+    @GetMapping("/admin_users")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String adminUsers(Model model) {
+        List<Users> users = userService.getAllUsers();
+        model.addAttribute("users", users);
+
+        model.addAttribute("currentUser", getUserData());
+
+        return "admin_users";
+    }
+
+    @GetMapping("/admin_roles")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String adminRoles(Model model) {
+        List<Roles> roles = userService.getAllRoles();
+        model.addAttribute("roles", roles);
+
+        model.addAttribute("currentUser", getUserData());
+
+        return "admin_roles";
+    }
 }

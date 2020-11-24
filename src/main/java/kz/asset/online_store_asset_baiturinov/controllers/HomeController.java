@@ -70,16 +70,17 @@ public class HomeController {
         return "403";
     }
 
-    @GetMapping("/login")
-    public String login(Model model){
-        model.addAttribute("currentUser", getUserData());
-        return "login";
-    }
-
     @GetMapping("/profile")
     @PreAuthorize("isAuthenticated()")
     public String profile(Model model){
         model.addAttribute("currentUser", getUserData());
+
+        List<Brands> brands = itemService.getAllBrands();
+        model.addAttribute("brands", brands);
+
+        List<Categories> categories = itemService.getAllCategories();
+        model.addAttribute("categories", categories);
+
         return "profile";
     }
 

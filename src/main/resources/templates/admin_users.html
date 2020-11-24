@@ -18,7 +18,7 @@
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
-                            <a class="nav-link" th:href="@{'/admin_users'}" th:text="#{admin.users}"></a>
+                            <a class="nav-link text-dark" th:href="@{'/admin_users'}" th:text="#{admin.users}"></a>
                         </li>
                         <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
                             <a class="nav-link" th:href="@{'/admin_roles'}" th:text="#{admin.roles}"></a>
@@ -27,7 +27,7 @@
                             <a class="nav-link" th:href="@{'/admin'}" th:text="#{admin.brands}"></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" th:href="@{'/admin_countries'}" th:text="#{admin.countries}"></a>
+                            <a class="nav-link" th:href="@{'/admin_countries'}" th:text="#{admin.countries}"></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{'/admin_items'}" th:text="#{admin.items}"></a>
@@ -42,14 +42,33 @@
 
         <div class="col-10">
             <div class="container pt-5 mb-5">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${param.passworderror}">
+                    <strong th:text="#{alert.passworderror}"></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${param.username_error}">
+                    <strong th:text="#{alert.username_error}"></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${param.success_user_add}">
+                    <strong th:text="#{alert.success_user_add}"></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
                 <div class="row d-flex justify-content-between">
-                    <h4 th:text="#{admin.countries}"></h4>
+
+                    <h4 th:text="#{admin.users}"></h4>
                     <button type="button" style="background-color: #08a800; font-weight: bold;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" th:text="#{button.addnew}">
                     </button>
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <form th:action="@{'/addCountry'}" method="post">
+                                <form th:action="@{'/addUser'}" method="post">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">Add new publication</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -58,17 +77,28 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <label th:text="#{label.name}"></label>
-                                            <input type="text" name="name" class="form-control" th:placeholder="#{label.name}" required>
+                                            <label th:text="#{label.email}"></label>
+                                            <input type="email" name="user_email" class="form-control" th:placeholder="#{label.email}" required>
                                         </div>
                                         <div class="form-group">
-                                            <label th:text="#{label.code}"></label>
-                                            <input type="text" name="code" class="form-control" th:placeholder="#{label.code}" required>
+                                            <label th:text="#{label.password}"></label>
+                                            <input type="password" name="user_password" class="form-control" th:placeholder="#{label.password}" required>
                                         </div>
+                                        <div class="form-group">
+                                            <label th:text="#{label.repassword}"></label>
+                                            <input type="password" name="user_repassword" class="form-control" th:placeholder="#{label.repassword}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label th:text="#{label.fullname}"></label>
+                                            <input type="text" name="full_name" class="form-control" th:placeholder="#{label.fullname}" required>
+                                        </div>
+<!--                                        <div class="form-group">-->
+<!--                                            <button class="btn btn-success float-right" th:text="#{button.signup}"></button>-->
+<!--                                        </div>-->
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight: bold;" th:text="#{button.cancel}"></button>
-                                        <button class="btn btn-success" style="background-color: #2bc170;"  th:text="#{button.addItem}"></button>
+                                        <button class="btn btn-success float-right" style="background-color: #2bc170;" th:text="#{button.signup}"></button>
                                     </div>
                                 </form>
                             </div>
@@ -81,40 +111,45 @@
                 <thead>
                 <tr>
                     <th scope="col" th:text="#{label.id}"></th>
-                    <th scope="col" th:text="#{label.name}"></th>
-                    <th scope="col" th:text="#{label.code}"></th>
-                    <th scope="col" th:text="#{label.operations}"></th>
+                    <th scope="col" th:text="#{label.email}"></th>
+                    <th scope="col" th:text="#{label.fullname}"></th>
+                    <th scope="col" th:text="#{label.roles}"></th>
+                    <th scope="col" th:text="#{label.details}"></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="country : ${countries}">
-                    <th scope="row" th:text="${country.id}"></th>
-                    <td th:text="${country.name}"></td>
-                    <td th:text="${country.code}"></td>
+                <tr th:each="user : ${users}">
+                    <th scope="row" th:text="${user.id}"></th>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.fullName}"></td>
+                    <td><span th:each="role : ${user.roles}" th:text="${role.role} + ' '"></span></td>
                     <td class="d-flex">
 
-                        <button type="button" class="btn btn-primary" style="font-weight: bold;" data-toggle="modal" th:attr="data-target='#edit' + ${country.id}"><i class="fas fa-edit"></i>
+                        <button type="button" class="btn btn-primary" style="font-weight: bold;" data-toggle="modal" th:attr="data-target='#edit' + ${user.id}"><i class="fas fa-edit"></i>
                         </button>
 
-                        <div class="modal fade" th:id="'edit' + ${country.id}" tabindex="-1" th:attr="aria-labelledby='edit' + ${country.id} + 'Label'" aria-hidden="true">
+                        <div class="modal fade" th:id="'edit' + ${user.id}" tabindex="-1" th:attr="aria-labelledby='edit' + ${user.id} + 'Label'" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
-                                    <form th:action="@{'/editCountry'}" method="post">
+                                    <form th:action="@{'/editUser'}" method="post">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" th:id="'edit' + ${country.id} + 'Label'">Edit publication</h5>
+                                            <h5 class="modal-title" th:id="'edit' + ${user.id} + 'Label'">Edit publication</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="form-group">
-                                                <label th:text="#{label.name}"></label>
-                                                <input type="hidden" name="country_id" th:value="${country.id}">
-                                                <input type="text" name="name" class="form-control" th:value="${country.name}" required>
+                                                <label th:text="#{label.email}"></label>
+                                                <input type="email" name="user_email" class="form-control" th:value="${user.email}" required>
                                             </div>
                                             <div class="form-group">
-                                                <label th:text="#{label.code}"></label>
-                                                <input type="text" name="code" class="form-control" th:value="${country.code}" required>
+                                                <label th:text="#{label.password}"></label>
+                                                <input type="password" name="user_password" class="form-control" th:value="${user.password}" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label th:text="#{label.fullname}"></label>
+                                                <input type="text" name="full_name" class="form-control" th:placeholder="${user.fullName}" required>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -126,8 +161,8 @@
                             </div>
                         </div>
 
-                        <form action="/deleteCountry" method="post">
-                            <input type="hidden" name="country_id" th:value="${country.id}">
+                        <form action="/deleteUser" method="post">
+                            <input type="hidden" name="brand_id" th:value="${user.id}">
                             <button class="btn btn-info btn-sm ml-3" style="background-color: red; font-weight: bold;" th:text="#{button.delete}"></button>
                         </form>
                     </td>

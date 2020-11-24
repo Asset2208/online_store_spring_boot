@@ -1,19 +1,32 @@
 package kz.asset.online_store_asset_baiturinov.service.impl;
 
+import kz.asset.online_store_asset_baiturinov.models.Roles;
 import kz.asset.online_store_asset_baiturinov.models.Users;
+import kz.asset.online_store_asset_baiturinov.repo.RoleRepository;
 import kz.asset.online_store_asset_baiturinov.repo.UserRepository;
 import kz.asset.online_store_asset_baiturinov.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
@@ -31,5 +44,60 @@ public class UserServiceImpl implements UserService {
     @Override
     public Users getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+//    public boolean deleteUser(Long userId) {
+//        Users user = userRepository.getOne(userId);
+//        if (user != null){
+//            userRepository.delete(user);
+//            return true;
+//        }
+//        return false;
+//    }
+
+
+    @Override
+    public Users editUser(Users user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public boolean saveUser(Users user) {
+        Users userFromDb = userRepository.findByEmail(user.getEmail());
+        if (userFromDb != null){
+            return false;
+        }
+
+        List<Roles> roles = new ArrayList<>();
+        roles.add(roleRepository.getOne(1L));
+        user.setRoles(roles);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public List<Users> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public Roles addRole(Roles roles) {
+        return roleRepository.save(roles);
+    }
+
+    @Override
+    public Roles getRoleByName(String role) {
+        return roleRepository.findByRole(role);
+    }
+
+    @Override
+    public List<Roles> getAllRoles() {
+        return roleRepository.findAll();
+    }
+
+    @Override
+    public Roles getRole(Long id) {
+        return roleRepository.getOne(id);
     }
 }
