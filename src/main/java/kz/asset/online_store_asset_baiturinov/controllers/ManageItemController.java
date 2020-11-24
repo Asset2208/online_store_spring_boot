@@ -7,6 +7,7 @@ import kz.asset.online_store_asset_baiturinov.models.ShopItem;
 import kz.asset.online_store_asset_baiturinov.repo.ShopItemRepository;
 import kz.asset.online_store_asset_baiturinov.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ public class ManageItemController {
     private ItemService itemService;
 
     @GetMapping("/add")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String add(Model model)
     {
         List<Brands> brands = itemService.getAllBrands();
@@ -33,6 +35,7 @@ public class ManageItemController {
     }
 
     @PostMapping("/addItem")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String addItem(Model model,
                           @RequestParam(name = "name")String name,
                           @RequestParam(name = "description") String description,
@@ -71,6 +74,7 @@ public class ManageItemController {
     }
 
     @PostMapping("/saveItem")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String saveItem(Model model,
                            @RequestParam(name = "id")Long id,
                           @RequestParam(name = "name")String name,
@@ -103,6 +107,7 @@ public class ManageItemController {
     }
 
     @GetMapping("/item/{Id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String getItem(Model model,
                           @PathVariable(name = "Id") Long id){
         ShopItem item = itemService.getItem(id);
@@ -115,6 +120,7 @@ public class ManageItemController {
     }
 
     @PostMapping("/delete")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String deleteItem(@RequestParam(name = "id") Long id, Model model){
         ShopItem item = itemService.getItem(id);
         if (item != null) {
@@ -126,6 +132,7 @@ public class ManageItemController {
     }
 
     @PostMapping("/assigncategory")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String assignCategory(Model model, @RequestParam(name = "item_id") Long item_id,
                                  @RequestParam(name = "category_id") Long category_id){
         Categories cat = itemService.getCategory(category_id);
@@ -146,6 +153,7 @@ public class ManageItemController {
     }
 
     @PostMapping("/declinecategory")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String declinecategory(Model model, @RequestParam(name = "item_id") Long item_id,
                                  @RequestParam(name = "category_id") Long category_id){
         Categories cat = itemService.getCategory(category_id);

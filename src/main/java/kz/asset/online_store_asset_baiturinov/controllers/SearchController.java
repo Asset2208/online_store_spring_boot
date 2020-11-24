@@ -3,8 +3,14 @@ package kz.asset.online_store_asset_baiturinov.controllers;
 import kz.asset.online_store_asset_baiturinov.models.Brands;
 import kz.asset.online_store_asset_baiturinov.models.Categories;
 import kz.asset.online_store_asset_baiturinov.models.ShopItem;
+import kz.asset.online_store_asset_baiturinov.models.Users;
 import kz.asset.online_store_asset_baiturinov.service.ItemService;
+import kz.asset.online_store_asset_baiturinov.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +25,19 @@ public class SearchController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private UserService userService;
+
+    private Users getUserData(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)){
+            User secUser = (User)authentication.getPrincipal();
+            Users myUser = userService.getUserByEmail(secUser.getUsername());
+            return myUser;
+        }
+        return null;
+    }
 
     @GetMapping("/search")
     public String simpleSearch(Model model, @RequestParam(name = "search_result") String result){
@@ -36,6 +55,8 @@ public class SearchController {
         List<Categories> categories = itemService.getAllCategories();
         model.addAttribute("categories", categories);
 
+        model.addAttribute("currentUser", getUserData());
+
         return "search";
     }
 
@@ -52,6 +73,8 @@ public class SearchController {
 
             List<Categories> categories = itemService.getAllCategories();
             model.addAttribute("categories", categories);
+
+            model.addAttribute("currentUser", getUserData());
 
             return "search";
         }
@@ -86,6 +109,8 @@ public class SearchController {
         List<Categories> categories = itemService.getAllCategories();
         model.addAttribute("categories", categories);
 
+        model.addAttribute("currentUser", getUserData());
+
         return "search";
     }
 
@@ -113,6 +138,8 @@ public class SearchController {
 
         List<Categories> categories = itemService.getAllCategories();
         model.addAttribute("categories", categories);
+
+        model.addAttribute("currentUser", getUserData());
 
         return "search";
     }
@@ -142,6 +169,8 @@ public class SearchController {
         List<Categories> categories = itemService.getAllCategories();
         model.addAttribute("categories", categories);
 
+        model.addAttribute("currentUser", getUserData());
+
         return "search";
     }
 
@@ -158,6 +187,8 @@ public class SearchController {
 
             List<Categories> categories = itemService.getAllCategories();
             model.addAttribute("categories", categories);
+
+            model.addAttribute("currentUser", getUserData());
 
             return "search";
         }

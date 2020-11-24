@@ -4,6 +4,7 @@ import kz.asset.online_store_asset_baiturinov.models.Brands;
 import kz.asset.online_store_asset_baiturinov.models.Countries;
 import kz.asset.online_store_asset_baiturinov.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ public class ManageBrandsController {
     private ItemService itemService;
 
     @GetMapping("/addBrand")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String addBrandPage(Model model) {
         List<Countries> countries = itemService.getAllCountries();
         model.addAttribute("countries", countries);
@@ -27,6 +29,7 @@ public class ManageBrandsController {
     }
 
     @PostMapping("/addBrand")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String addBrand(@RequestParam(name = "name") String name,
                            @RequestParam(name = "country") Long country_id){
         Countries country = itemService.getCountry(country_id);
@@ -39,6 +42,7 @@ public class ManageBrandsController {
     }
 
     @PostMapping("/editBrand")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String editBrand(@RequestParam(name = "brand_id") Long brand_id,
                             @RequestParam(name = "name") String name,
                            @RequestParam(name = "country") Long country_id){
@@ -60,6 +64,7 @@ public class ManageBrandsController {
     }
 
     @PostMapping("/deleteBrand")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String deleteBrand(@RequestParam(name = "brand_id") Long brand_id){
         Brands brand_initial = itemService.getBrand(brand_id);
         if (brand_initial != null) {

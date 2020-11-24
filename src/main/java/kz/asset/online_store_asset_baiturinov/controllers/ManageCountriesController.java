@@ -3,6 +3,7 @@ package kz.asset.online_store_asset_baiturinov.controllers;
 import kz.asset.online_store_asset_baiturinov.models.Countries;
 import kz.asset.online_store_asset_baiturinov.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +16,13 @@ public class ManageCountriesController {
     private ItemService itemService;
 
     @GetMapping("/addCountry")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String addCountryPage(){
         return "addCountry";
     }
 
     @PostMapping("/addCountry")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String addCountry(@RequestParam(name = "name") String name,
                              @RequestParam(name = "code") String code){
         Countries country = new Countries(null, name, code);
@@ -28,6 +31,7 @@ public class ManageCountriesController {
     }
 
     @PostMapping("/editCountry")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String editCountry(@RequestParam(name = "country_id") Long country_id,
                                 @RequestParam(name = "name") String name,
                              @RequestParam(name = "code") String code){
@@ -46,6 +50,7 @@ public class ManageCountriesController {
     }
 
     @PostMapping("/deleteCountry")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String deleteCountry(@RequestParam(name = "country_id") Long country_id){
         Countries country_initial = itemService.getCountry(country_id);
 
