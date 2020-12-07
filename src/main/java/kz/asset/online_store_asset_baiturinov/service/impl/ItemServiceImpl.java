@@ -1,13 +1,7 @@
 package kz.asset.online_store_asset_baiturinov.service.impl;
 
-import kz.asset.online_store_asset_baiturinov.models.Brands;
-import kz.asset.online_store_asset_baiturinov.models.Categories;
-import kz.asset.online_store_asset_baiturinov.models.Countries;
-import kz.asset.online_store_asset_baiturinov.models.ShopItem;
-import kz.asset.online_store_asset_baiturinov.repo.BrandsRepository;
-import kz.asset.online_store_asset_baiturinov.repo.CategoryRepository;
-import kz.asset.online_store_asset_baiturinov.repo.CountriesRepository;
-import kz.asset.online_store_asset_baiturinov.repo.ShopItemRepository;
+import kz.asset.online_store_asset_baiturinov.models.*;
+import kz.asset.online_store_asset_baiturinov.repo.*;
 import kz.asset.online_store_asset_baiturinov.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +23,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private PictureRepository pictureRepository;
 
     @Override
     public ShopItem addItem(ShopItem item) {
@@ -185,5 +182,33 @@ public class ItemServiceImpl implements ItemService {
         return categoryRepository.findByName(name);
     }
 
+    @Override
+    public Pictures addPicture(Pictures picture) {
+        return pictureRepository.save(picture);
+    }
 
+    @Override
+    public List<Pictures> getAllPictures() {
+        return pictureRepository.findAll();
+    }
+
+    @Override
+    public Pictures getPicture(Long id) {
+        return pictureRepository.getOne(id);
+    }
+
+    @Override
+    public void deletePicture(Pictures picture) {
+        pictureRepository.delete(picture);
+    }
+
+    @Override
+    public Pictures savePicture(Pictures picture) {
+        return pictureRepository.save(picture);
+    }
+
+    @Override
+    public List<Pictures> getPicturesByItemId(Long id) {
+        return pictureRepository.findByShopItemId(id);
+    }
 }

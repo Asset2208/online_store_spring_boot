@@ -1,12 +1,14 @@
 package kz.asset.online_store_asset_baiturinov.controllers;
 
-import kz.asset.online_store_asset_baiturinov.models.Brands;
-import kz.asset.online_store_asset_baiturinov.models.Categories;
-import kz.asset.online_store_asset_baiturinov.models.Roles;
-import kz.asset.online_store_asset_baiturinov.models.Users;
+import kz.asset.online_store_asset_baiturinov.models.*;
 import kz.asset.online_store_asset_baiturinov.service.ItemService;
 import kz.asset.online_store_asset_baiturinov.service.UserService;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,11 +18,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -34,6 +41,15 @@ public class UserController {
 
     @Autowired
     private ItemService itemService;
+
+    @Value("${file.avatar.viewPath}")
+    private String viewPath;
+
+    @Value("${file.avatar.uploadPath}")
+    private String uploadPath;
+
+    @Value("${file.avatar.defaultPicture}")
+    private String defaultPicture;
 
 
     @GetMapping("/registration")
@@ -52,7 +68,11 @@ public class UserController {
             model.addAttribute("passwordError", "Пароли не совпадают");
             return "registration";
         }
-        Users user = new Users(null, email, password, full_name, null);
+//        Users user = new Users(null, email, password, full_name, null);
+        Users user = new Users();
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setFullName(full_name);
         if (!userService.saveUser(user)){
             model.addAttribute("usernameError", "Пользователь с таким именем уже существует");
             return "registration";
@@ -72,7 +92,11 @@ public class UserController {
             redirectAttrs.addFlashAttribute("passwordError", "Пароли не совпадают");
             return "redirect:/admin_users?passworderror";
         }
-        Users user = new Users(null, email, password, full_name, null);
+//        Users user = new Users(null, email, password, full_name, null);
+        Users user = new Users();
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setFullName(full_name);
         if (!userService.saveUser(user)){
             redirectAttrs.addFlashAttribute("usernameError", "Пользователь с таким именем уже существует");
             return "redirect:/admin_users?username_error";
@@ -146,6 +170,91 @@ public class UserController {
         return "redirect:/profile?error";
     }
 
+    @PostMapping("/deleteUser")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String deleteUser(@RequestParam("user_id") Long user_id){
+        Users user = userService.getUserById(user_id);
+        Users curr_user = getUserData();
+        if (user != curr_user){
+            userService.deleteUser(user);
+            return "redirect:/admin_users";
+        }
+        return "redirect:/admin_users?user_delete_error";
+    }
+
+    @PostMapping("/editUser")
+    @PreAuthorize("isAuthenticated()")
+    public String editUser(Model model, @RequestParam("user_id") Long user_id,
+                           @RequestParam("email") String email,
+                           @RequestParam("full_name") String full_name, RedirectAttributes redirectAttrs){
+        Users user = userService.getUserById(user_id);
+        if (user != null){
+            user.setFullName(full_name);
+            userService.editUser(user);
+
+            return "redirect:/admin_users/" + user_id;
+        }
+        return "redirect:/admin_users/" + user_id + "?error";
+    }
+
+    @PostMapping("/uploadavatar")
+    @PreAuthorize("isAuthenticated()")
+    public String uploadAvatar(@RequestParam("user_ava") MultipartFile file){
+
+        if (file.getContentType().equals("image/jpeg") || file.getContentType().equals("image/png")){
+            try {
+
+                Users currentUser = getUserData();
+
+                String picName = DigestUtils.sha1Hex("avatar_" + currentUser.getId() + "_!Picture");
+
+                byte []bytes = file.getBytes();
+                Path path = Paths.get(uploadPath + picName + ".jpg");
+                Files.write(path, bytes);
+
+                currentUser.setPictureURL(picName);
+                userService.editUser(currentUser);
+
+                return "redirect:/profile?success_picture";
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
+        return "redirect:/";
+
+    }
+
+    @GetMapping(value = "/viewphoto/{url}", produces = {MediaType.IMAGE_JPEG_VALUE})
+    @PreAuthorize("isAuthenticated()")
+    public @ResponseBody byte[] viewProfilePhoto(@PathVariable("url") String url) throws IOException {
+
+        String pictureURL = viewPath + defaultPicture;
+
+        if (url != null && !url.equals("null")){
+            pictureURL = viewPath + url+".jpg";
+        }
+
+        InputStream in;
+
+        try {
+
+            ClassPathResource resource = new ClassPathResource(pictureURL);
+            in = resource.getInputStream();
+
+        }catch (Exception e){
+            ClassPathResource resource = new ClassPathResource(viewPath + defaultPicture);
+            in = resource.getInputStream();
+            e.printStackTrace();
+        }
+
+        return IOUtils.toByteArray(in);
+
+    }
+
+
     @PostMapping("/editpassword")
     @PreAuthorize("isAuthenticated()")
     public String editPassword(Model model, @RequestParam("old_password") String old_password,
@@ -174,6 +283,46 @@ public class UserController {
             return "redirect:/profile?error_oldpassword";
         }
         return "redirect:/profile?error";
+    }
+
+    @PostMapping("/assignrole")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String assignRole(Model model, @RequestParam(name = "user_id") Long user_id,
+                                 @RequestParam(name = "role_id") Long role_id){
+        Roles role = userService.getRole(role_id);
+        if (role != null){
+            Users user = userService.getUserById(user_id);
+            if (user != null) {
+                List<Roles> roles = user.getRoles();
+                if (roles == null) {
+                    roles = new ArrayList<>();
+                }
+                roles.add(role);
+
+                userService.editUser(user);
+                return "redirect:/admin_users/" + user_id;
+            }
+        }
+        return "redirect:/admin_users?error_role";
+    }
+
+    @PostMapping("/declinerole")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String declineRole(Model model, @RequestParam(name = "user_id") Long user_id,
+                                  @RequestParam(name = "role_id") Long role_id,
+                              @RequestParam(name = "roles_size") int size){
+        Roles role = userService.getRole(role_id);
+        if (role != null && size > 1){
+            Users user = userService.getUserById(user_id);
+            if (user != null) {
+                List<Roles> roles = user.getRoles();
+                roles.remove(role);
+
+                userService.editUser(user);
+                return "redirect:/admin_users/" + user_id;
+            }
+        }
+        return "redirect:/admin_users/" + user_id + "?role_error_dismiss";
     }
 
 }

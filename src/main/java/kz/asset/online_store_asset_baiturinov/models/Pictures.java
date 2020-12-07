@@ -5,24 +5,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Date;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Users {
+public class Pictures {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String email;
-    private String password;
-    private String fullName;
-    private String pictureURL;
+    private String url;
+    private Date addedDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Roles> roles;
-
+    @ManyToOne
+    private ShopItem shopItem;
 }

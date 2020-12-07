@@ -94,6 +94,9 @@ public class AdminController {
 
             model.addAttribute("currentUser", getUserData());
 
+            List<Pictures> pictures = itemService.getPicturesByItemId(id);
+            model.addAttribute("pictures", pictures);
+
             return "details_item";
         }
         else {
@@ -132,5 +135,28 @@ public class AdminController {
         model.addAttribute("currentUser", getUserData());
 
         return "admin_roles";
+    }
+
+    @GetMapping("/admin_users/{Id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public String user_details(Model model, @PathVariable(value = "Id") Long id){
+        Users user = userService.getUserById(id);
+        if (user != null) {
+
+
+            model.addAttribute("user", user);
+            List<Roles> roles = userService.getAllRoles();
+
+            roles.removeIf(x -> user.getRoles().contains(x));
+
+            model.addAttribute("roles", roles);
+
+            model.addAttribute("currentUser", getUserData());
+
+            return "details_user";
+        }
+        else {
+            return "redirect:/admin_users";
+        }
     }
 }

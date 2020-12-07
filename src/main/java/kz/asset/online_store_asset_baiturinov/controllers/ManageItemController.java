@@ -1,21 +1,29 @@
 package kz.asset.online_store_asset_baiturinov.controllers;
 
-import kz.asset.online_store_asset_baiturinov.models.Brands;
-import kz.asset.online_store_asset_baiturinov.models.Categories;
-import kz.asset.online_store_asset_baiturinov.models.Countries;
-import kz.asset.online_store_asset_baiturinov.models.ShopItem;
+import kz.asset.online_store_asset_baiturinov.models.*;
 import kz.asset.online_store_asset_baiturinov.repo.ShopItemRepository;
 import kz.asset.online_store_asset_baiturinov.service.ItemService;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +32,15 @@ public class ManageItemController {
 
     @Autowired
     private ItemService itemService;
+
+    @Value("${file.item_photo.viewPath}")
+    private String viewPath;
+
+    @Value("${file.item_photo.uploadPath}")
+    private String uploadPath;
+
+    @Value("${file.item_photo.defaultPicture}")
+    private String defaultPicture;
 
     @GetMapping("/add")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
@@ -168,6 +185,98 @@ public class ManageItemController {
             }
         }
         return "redirect:/admin_items";
+    }
+
+    @PostMapping("/upload_item_photo")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
+    public String uploadItemPhoto(@RequestParam("item_photo") MultipartFile file,
+                                  @RequestParam("item_id") Long item_id){
+        if (file.getContentType().equals("image/jpeg") || file.getContentType().equals("image/png")){
+            try {
+
+                ShopItem item = itemService.getItem(item_id);
+
+                List<Pictures> pictures = itemService.getPicturesByItemId(item_id);
+                int size = pictures.size() + 1;
+                String picName = DigestUtils.sha1Hex("itemphoto_" + item.getId() + "_" + size + "_!Picture");
+
+                byte []bytes = file.getBytes();
+                Path path = Paths.get(uploadPath + picName + ".jpg");
+                Files.write(path, bytes);
+
+                SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+                java.util.Date date = new java.util.Date();
+
+                Pictures picture = new Pictures(null, picName, date, item);
+                itemService.savePicture(picture);
+
+                return "redirect:/admin_items/" + item_id;
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
+        return "redirect:/";
+
+    }
+
+    @GetMapping(value = "/itemphoto/{url}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
+    public @ResponseBody byte[] viewItemPhotos(@PathVariable("url") String url) throws IOException {
+
+        String pictureURL = viewPath + defaultPicture;
+
+        if (url != null && !url.equals("null")){
+            pictureURL = viewPath + url+".jpg";
+        }
+
+        InputStream in;
+
+        try {
+
+            ClassPathResource resource = new ClassPathResource(pictureURL);
+            in = resource.getInputStream();
+
+        }catch (Exception e){
+            ClassPathResource resource = new ClassPathResource(viewPath + defaultPicture);
+            in = resource.getInputStream();
+            e.printStackTrace();
+        }
+
+        return IOUtils.toByteArray(in);
+
+    }
+
+    @PostMapping("/deletepicture")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
+    public String deletePicture(@RequestParam("picture_id") Long id,
+                                @RequestParam("item_id") Long item_id){
+        try {
+
+            Pictures picture = itemService.getPicture(id);
+
+            File file = new File(uploadPath + picture.getUrl() + ".jpg");
+            new FileInputStream(file);
+            System.gc();
+
+            Files.delete(Paths.get(file.getPath()));
+
+            itemService.deletePicture(picture);
+
+
+
+            return "redirect:/admin_items";
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+
+
+        return "redirect:/";
+
     }
 
 }

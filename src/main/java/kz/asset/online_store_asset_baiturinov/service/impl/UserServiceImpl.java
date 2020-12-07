@@ -100,4 +100,14 @@ public class UserServiceImpl implements UserService {
     public Roles getRole(Long id) {
         return roleRepository.getOne(id);
     }
+
+    @Override
+    public Users getUserById(Long id) {
+        return userRepository.getOne(id);
+    }
+
+    @Override
+    public void deleteUser(Users user) {
+        userRepository.delete(user);
+    }
 }

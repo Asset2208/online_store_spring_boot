@@ -1,9 +1,6 @@
 package kz.asset.online_store_asset_baiturinov.service;
 
-import kz.asset.online_store_asset_baiturinov.models.Brands;
-import kz.asset.online_store_asset_baiturinov.models.Categories;
-import kz.asset.online_store_asset_baiturinov.models.Countries;
-import kz.asset.online_store_asset_baiturinov.models.ShopItem;
+import kz.asset.online_store_asset_baiturinov.models.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,5 +42,12 @@ public interface ItemService {
     Categories saveCategory(Categories category);
     Categories getCategoryByName(String name);
 //    List<Categories> getAllCategoriesNotIn(List<Categories> categories);
+
+    Pictures addPicture(Pictures picture);
+    List<Pictures> getAllPictures();
+    Pictures getPicture(Long id);
+    void deletePicture(Pictures picture);
+    Pictures savePicture(Pictures picture);
+    List<Pictures> getPicturesByItemId(Long id);
 
 }
