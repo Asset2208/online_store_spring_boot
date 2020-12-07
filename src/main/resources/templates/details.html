@@ -55,13 +55,14 @@
                 }
             </style>
             <style>
-                #myImg {
+                [id^="myImg"] {
                     border-radius: 5px;
                     cursor: pointer;
                     transition: 0.3s;
                 }
-
-                #myImg:hover {opacity: 0.7;}
+                [id^="myImg"]:hover {
+                    opacity: 0.7;
+                }
 
                 /* The Modal (background) */
                 .modal {
@@ -165,16 +166,16 @@
                                 </div>
 
                                 <div th:each="pic : ${pictures}" class="d-inline-block">
-                                    <img th:src="@{'/itemphoto/'+ ${pic.url}}" style="min-height: 85px; max-height: 85px;" class="img-thumbnail mr-3" id="myImg">
+                                    <img th:src="@{'/itemphoto/'+ ${pic.url}}" style="min-height: 85px; max-height: 85px;" class="img-thumbnail mr-3" th:id="myImg + ${pic.id}" th:onclick="'getPropId(\'myImg' + ${pic.id} + '\');'">
                                     <!-- The Modal -->
-                                    <div id="myModal" class="modal">
-                                        <span class="close">&times;</span>
-                                        <img class="modal-content" id="img01">
-                                        <div id="caption"></div>
-                                    </div>
+
                                 </div>
 
-
+                                <div id="myModal" class="modal">
+                                    <span class="close">&times;</span>
+                                    <img class="modal-content" id="img01">
+                                    <div id="caption"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -192,26 +193,22 @@
         </div>
     </div>
     <script>
-        // Get the modal
-        var modal = document.getElementById("myModal");
-
-        // Get the image and insert it inside the modal - use its "alt" text as a caption
-        var img = document.getElementById("myImg");
-        var modalImg = document.getElementById("img01");
-        var captionText = document.getElementById("caption");
-        img.onclick = function(){
+        function getPropId(myImgId){
+            var modal = document.getElementById("myModal");
+            var img = document.getElementById(myImgId);
+            var modalImg = document.getElementById("img01");
+            var captionText = document.getElementById("caption");
             modal.style.display = "block";
-            modalImg.src = this.src;
-            captionText.innerHTML = this.alt;
+            modalImg.src = img.src;
+
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
         }
 
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
     </script>
 </div>
 </html>
