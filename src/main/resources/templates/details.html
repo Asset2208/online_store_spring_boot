@@ -2,86 +2,216 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main.html">
 <div layout:fragment="site_content">
     <div class="row mt-5">
-        <div class="col-sm-9 offset-1 mb-5">
-            <form th:action="@{'/saveItem'}" method="post">
-                <div class="form-group">
-                    <label th:text="#{label.name}"></label>
-                    <input type="text" name="name" class="form-control" th:value="${item.name}">
-                    <input type="hidden" name="id" th:value="${item.id}">
+        <div class="col">
+            <div class="card mt-2">
+                <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.categories}">
                 </div>
-                <div class="form-group">
-                    <label th:text="#{label.description}"></label>
-                    <input type="text" name="description" class="form-control" th:value="${item.description}">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:each="category : ${categories}"><img th:src="${category.logoURL}" style="min-height: 20px; max-width: 20px;"> <a th:href="@{'/searchcategory/' + ${category.id}}" style="font-weight: bold;" th:text="${category.name}"></a></li>
+                </ul>
+            </div>
+            <div class="card mt-2">
+                <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.brands}">
                 </div>
-                <div class="form-group">
-                    <label th:text="#{label.price}"></label>
-                    <input type="number" step="0.01" name="price" class="form-control" th:value="${item.price}">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:each="brand_nav : ${brands}"><a th:href="@{'/searchbrand/' + ${brand_nav.id}}" style="font-weight: bold;" th:text="${brand_nav.name}"></a></li>
+                </ul>
+            </div>
+            <div class="card mt-2">
+                <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.payments}">
                 </div>
-                <div class="form-group">
-                    <label th:text="#{label.amount}"></label>
-                    <input type="number" name="amount" class="form-control" th:value="${item.amount}">
+                <div class="card-body">
+                    <div class="row row-cols-3 m-0">
+                        <i class="fab fa-cc-visa fa-3x"></i>
+                        <i class="fab fa-cc-paypal fa-3x"></i>
+                        <i class="fab fa-cc-mastercard fa-3x"></i>
+                        <i class="fab fa-cc-apple-pay fa-3x"></i>
+                        <i class="fab fa-cc-amex fa-3x"></i>
+                        <i class="fab fa-cc-amazon-pay fa-3x"></i>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label th:text="#{label.rating}"></label>
-                    <select class="form-control form-control-lg" name="rating">
-                        <option value="1" th:selected="${item.stars==1}">1</option>
-                        <option value="2" th:selected="${item.stars==2}">2</option>
-                        <option value="3" th:selected="${item.stars==3}">3</option>
-                        <option value="4" th:selected="${item.stars==4}">4</option>
-                        <option value="5" th:selected="${item.stars==5}">5</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label th:text="#{label.picture_url}"></label>
-                    <input type="text" name="small_picture_url" class="form-control" th:value="${item.smallPictureUrl}">
-                </div>
-                <div class="form-group">
-                    <label th:text="#{label.large_picture_url}"></label>
-                    <input type="text" name="large_picture_url" class="form-control" th:value="${item.largePictureUrl}">
-                </div>
-                <div class="form-group">
-                    <label th:text="#{label.in_top}"></label>
-                    <select class="form-control form-control-lg" name="in_top">
-                        <option th:value="true" th:text="#{option.yes}" th:selected="${item.inTopPage==true}"></option>
-                        <option th:value="false" th:text="#{option.no}" th:selected="${item.inTopPage==false}"></option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label th:text="#{label.brands}"></label>
-                    <select class="form-control form-control-lg" name="brand">
-                        <option th:each="brand : ${brands}" th:text="${brand.name} + ' / ' + ${brand.country.name}" th:value="${brand.id}" th:selected="${item.brand != null && brand.id == item.brand.id}"></option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-success" style="background-color: #2bc170;"  th:text="#{button.saveItem}"></button>
-                </div>
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" th:text="#{button.delete}">
-                </button>
-            </form>
 
+            </div>
+        </div>
+        <div class="col-9 mb-5">
+            <style>
+                .description_cut p { /* Запрещаем перенос строк */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 3;
+                    -webkit-box-orient: vertical;
 
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <form th:action="@{'/delete'}" method="post">
-                        <input type="hidden" name="id" th:value="${item.id}">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel" th:text="#{message.confirm}"></h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                    /* Добавляем многоточие */
+                }
+                .name_cut a { /* Запрещаем перенос строк */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+
+                    /* Добавляем многоточие */
+                }
+            </style>
+            <style>
+                #myImg {
+                    border-radius: 5px;
+                    cursor: pointer;
+                    transition: 0.3s;
+                }
+
+                #myImg:hover {opacity: 0.7;}
+
+                /* The Modal (background) */
+                .modal {
+                    display: none; /* Hidden by default */
+                    position: fixed; /* Stay in place */
+                    z-index: 1; /* Sit on top */
+                    padding-top: 100px; /* Location of the box */
+                    left: 0;
+                    top: 0;
+                    width: 100%; /* Full width */
+                    height: 100%; /* Full height */
+                    overflow: auto; /* Enable scroll if needed */
+                    background-color: rgb(0,0,0); /* Fallback color */
+                    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+                }
+
+                /* Modal Content (image) */
+                .modal-content {
+                    margin: auto;
+                    display: block;
+                    width: 80%;
+                    max-width: 700px;
+                }
+
+                /* Caption of Modal Image */
+                #caption {
+                    margin: auto;
+                    display: block;
+                    width: 80%;
+                    max-width: 700px;
+                    text-align: center;
+                    color: #ccc;
+                    padding: 10px 0;
+                    height: 150px;
+                }
+
+                /* Add Animation */
+                .modal-content, #caption {
+                    -webkit-animation-name: zoom;
+                    -webkit-animation-duration: 0.6s;
+                    animation-name: zoom;
+                    animation-duration: 0.6s;
+                }
+
+                @-webkit-keyframes zoom {
+                    from {-webkit-transform:scale(0)}
+                    to {-webkit-transform:scale(1)}
+                }
+
+                @keyframes zoom {
+                    from {transform:scale(0)}
+                    to {transform:scale(1)}
+                }
+
+                /* The Close Button */
+                .close {
+                    position: absolute;
+                    top: 15px;
+                    right: 35px;
+                    color: #f1f1f1;
+                    font-size: 40px;
+                    font-weight: bold;
+                    transition: 0.3s;
+                }
+
+                .close:hover,
+                .close:focus {
+                    color: #bbb;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+
+                /* 100% Image Width on Smaller Screens */
+                @media only screen and (max-width: 700px){
+                    .modal-content {
+                        width: 100%;
+                    }
+                }
+            </style>
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <img th:src="${item.smallPictureUrl}"
+                             class="card-img-top" alt="..." style="width: 100%;">
+                        <div class="card-body">
+                            <div class="name_cut">
+                                <h5 class="card-title"><a th:href="@{'/item/' + ${item.id}}" style="font-weight: bold;" th:text="${item.name}"></a></h5>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{button.cancel}"></button>
-                                <button class="btn btn-primary" th:text="#{button.delete}"></button>
+                            <h5 style="font-weight: bold;" th:text="'$' + ${item.price}"></h5>
+                            <div class="description_cut">
+                                <p class="card-text" th:text="${item.description}"></p>
+                            </div>
+                            <ul class="list-inline mt-3">
+                                <li class="list-inline-item"><h6 style="font-weight: bold;" th:text="#{h5.brand}" class="card-text"></h6></li>
+                                <li class="list-inline-item"><h6><a th:href="@{'/searchbrand/' + ${item.brand.id}}" class="card-link" style="font-weight: bold;" th:text="${item.brand.name} + ', ' + ${item.brand.country.code}"></a></h6></li>
+                            </ul>
+                            <div th:if="${picture != null}">
+                                <h5 th:text="#{h5.screenshots}" class="text-center"></h5>
+                                <div class="col-sm-6 offset-3 mb-5" style="width: 50%;">
+                                    <img th:src="@{'/itemphoto/'+ ${picture.url}}" style="width: 100%;" class="img-thumbnail">
+                                </div>
+
+                                <div th:each="pic : ${pictures}" class="d-inline-block">
+                                    <img th:src="@{'/itemphoto/'+ ${pic.url}}" style="min-height: 85px; max-height: 85px;" class="img-thumbnail mr-3" id="myImg">
+                                    <!-- The Modal -->
+                                    <div id="myModal" class="modal">
+                                        <span class="close">&times;</span>
+                                        <img class="modal-content" id="img01">
+                                        <div id="caption"></div>
+                                    </div>
+                                </div>
+
+
                             </div>
                         </div>
-                    </form>
+                        <div class="card-footer">
+                            <div class="rating_star">
+                                <input type="radio"  th:value="5" th:id="${item.id} + '5'" th:checked="${item.getStars()==5}" disabled><label th:for="${item.id} + '5'" >☆</label>
+                                <input type="radio"  th:value="4" th:id="${item.id} + '4'" th:checked="${item.getStars()==4}" disabled><label th:for="${item.id} + '4'">☆</label>
+                                <input type="radio"  th:value="3" th:id="${item.id} + '3'" th:checked="${item.getStars()==3}" disabled><label th:for="${item.id} + '3'">☆</label>
+                                <input type="radio"  th:value="2" th:id="${item.id} + '2'" th:checked="${item.getStars()==2}" disabled><label th:for="${item.id} + '2'">☆</label>
+                                <input type="radio"  th:value="1" th:id="${item.id} + '1'" th:checked="${item.getStars()==1}" disabled><label th:for="${item.id} + '1'">☆</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the image and insert it inside the modal - use its "alt" text as a caption
+        var img = document.getElementById("myImg");
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+        img.onclick = function(){
+            modal.style.display = "block";
+            modalImg.src = this.src;
+            captionText.innerHTML = this.alt;
+        }
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+    </script>
 </div>
 </html>

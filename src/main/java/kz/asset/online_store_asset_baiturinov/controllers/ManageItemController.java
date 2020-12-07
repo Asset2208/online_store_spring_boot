@@ -124,11 +124,25 @@ public class ManageItemController {
     }
 
     @GetMapping("/item/{Id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String getItem(Model model,
                           @PathVariable(name = "Id") Long id){
         ShopItem item = itemService.getItem(id);
         model.addAttribute("item", item);
+
+        List<Categories> categories = itemService.getAllCategories();
+        model.addAttribute("categories", categories);
+
+        List<Pictures> pictures = itemService.getPicturesByItemId(id);
+        if (pictures.size() != 0) {
+            Pictures main_picture = pictures.get(0);
+            model.addAttribute("picture", main_picture);
+        }
+        else {
+            model.addAttribute("picture", null);
+        }
+        model.addAttribute("pictures", pictures);
+
+
 
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
@@ -223,7 +237,6 @@ public class ManageItemController {
     }
 
     @GetMapping(value = "/itemphoto/{url}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public @ResponseBody byte[] viewItemPhotos(@PathVariable("url") String url) throws IOException {
 
         String pictureURL = viewPath + defaultPicture;

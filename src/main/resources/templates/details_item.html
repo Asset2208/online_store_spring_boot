@@ -168,7 +168,7 @@
                     <tbody>
                     <tr th:each="picture : ${pictures}">
                         <form th:action="@{'/deletepicture'}" method="post">
-                            <td><div style="max-width: 100px;"><img th:src="@{'/itemphoto/'+ ${picture.url}}" style="width: 100%;"></div></td>
+                            <td><div style="max-width: 100px;"><img th:src="@{'/itemphoto/'+ ${picture.url}}" style="width: 100%;" class="img-thumbnail"></div></td>
                             <td th:text="${picture.url}"></td>
                             <td th:text="${picture.addedDate}"></td>
                             <input type="hidden" name="picture_id" th:value="${picture.id}">
