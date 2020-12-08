@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main.html">
+<div layout:fragment="site_content">
+    <div class="row mt-5">
+        <div class="col">
+            <div class="card mt-2">
+                <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.categories}">
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:each="category : ${categories}"><img th:src="${category.logoURL}" style="min-height: 20px; max-width: 20px;"> <a th:href="@{'/searchcategory/' + ${category.id}}" style="font-weight: bold;" th:text="${category.name}"></a></li>
+                </ul>
+            </div>
+            <div class="card mt-2">
+                <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.brands}">
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:each="brand_nav : ${brands}"><a th:href="@{'/searchbrand/' + ${brand_nav.id}}" style="font-weight: bold;" th:text="${brand_nav.name}"></a></li>
+                </ul>
+            </div>
+            <div class="card mt-2">
+                <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.payments}">
+                </div>
+                <div class="card-body">
+                    <div class="row row-cols-3 m-0">
+                        <i class="fab fa-cc-visa fa-3x"></i>
+                        <i class="fab fa-cc-paypal fa-3x"></i>
+                        <i class="fab fa-cc-mastercard fa-3x"></i>
+                        <i class="fab fa-cc-apple-pay fa-3x"></i>
+                        <i class="fab fa-cc-amex fa-3x"></i>
+                        <i class="fab fa-cc-amazon-pay fa-3x"></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-9 mb-5">
+            <div class="row d-flex justify-content-between ml-auto mr-0" style="max-width: 900px;">
+                <form class="form-inline w-100" th:action="@{'/search'}" method="get">
+                    <div class="form-group w-75 mr-4">
+                        <input type="text" class="form-control w-100" id="search" name="search_result" th:placeholder="#{label.search}">
+                    </div>
+                    <div class="form-group"><button class="btn btn-primary w-100" th:text="#{button.search}" style="background-color: #0b7e3e; color: white; font-weight: bold;"></button></div>
+                </form>
+            </div>
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h5 th:text="#{navbar.basket}"></h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col" th:text="#{label.item}"></th>
+                            <th scope="col" th:text="#{label.price}"></th>
+                            <th scope="col" th:text="#{label.amount}"></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="basket : ${baskets}">
+
+                            <td th:text="${basket.item.name}"></td>
+                            <td th:text="${basket.item.price}">2</td>
+                            <td th:text="${basket.amount}"></td>
+                            <td width="10%">
+                                <div class="row">
+                                    <form th:action="@{'/addQuantity'}" method="post" class="mr-2">
+                                        <input type="hidden" name="id" th:value="${basket.item.id}">
+                                        <button class="btn btn-success"> + </button>
+                                    </form>
+                                    <form th:action="@{'/removeQuantity'}" method="post">
+                                        <input type="hidden" name="id" th:value="${basket.item.id}">
+                                        <button class="btn btn-danger"> - </button>
+                                    </form>
+                                </div>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="row ml-2" th:if="${baskets.size() != 0}">
+                        <h5 th:text="#{h5.total} + ': '"></h5>
+                        <h5 th:text="'$' + ${total}"></h5>
+                        <form th:action="@{'/checkIn'}" method="post" class="ml-auto">
+                            <button class="btn btn-primary">Check in</button>
+                        </form>
+                        <form th:action="@{'/clearBasket'}" method="post" class="ml-3 mr-2">
+                            <button class="btn btn-danger">Clear basket</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-footer">
+<!--                    <div class="rating_star">-->
+<!--                        <input type="radio"  th:value="5" th:id="${item.id} + '5'" th:checked="${item.getStars()==5}" disabled><label th:for="${item.id} + '5'" >☆</label>-->
+<!--                        <input type="radio"  th:value="4" th:id="${item.id} + '4'" th:checked="${item.getStars()==4}" disabled><label th:for="${item.id} + '4'">☆</label>-->
+<!--                        <input type="radio"  th:value="3" th:id="${item.id} + '3'" th:checked="${item.getStars()==3}" disabled><label th:for="${item.id} + '3'">☆</label>-->
+<!--                        <input type="radio"  th:value="2" th:id="${item.id} + '2'" th:checked="${item.getStars()==2}" disabled><label th:for="${item.id} + '2'">☆</label>-->
+<!--                        <input type="radio"  th:value="1" th:id="${item.id} + '1'" th:checked="${item.getStars()==1}" disabled><label th:for="${item.id} + '1'">☆</label>-->
+<!--                    </div>-->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</html>

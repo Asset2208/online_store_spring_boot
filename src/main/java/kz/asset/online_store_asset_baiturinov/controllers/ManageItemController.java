@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -125,7 +126,7 @@ public class ManageItemController {
 
     @GetMapping("/item/{Id}")
     public String getItem(Model model,
-                          @PathVariable(name = "Id") Long id){
+                          @PathVariable(name = "Id") Long id, HttpSession httpSession){
         ShopItem item = itemService.getItem(id);
         model.addAttribute("item", item);
 
