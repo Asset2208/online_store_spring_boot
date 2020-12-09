@@ -1,6 +1,7 @@
 package kz.asset.online_store_asset_baiturinov.service;
 
 import kz.asset.online_store_asset_baiturinov.models.*;
+import org.hibernate.criterion.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,5 +50,11 @@ public interface ItemService {
     void deletePicture(Pictures picture);
     Pictures savePicture(Pictures picture);
     List<Pictures> getPicturesByItemId(Long id);
+
+    Orders addOrder(Orders order);
+    List<Orders> getAllOrders();
+    Orders getOrder(Long id);
+    void deleteOrder(Orders order);
+    Orders saveOrder(Orders order);
 
 }

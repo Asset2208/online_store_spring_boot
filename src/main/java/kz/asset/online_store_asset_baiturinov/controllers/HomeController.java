@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -113,9 +114,7 @@ public class HomeController {
             basket = new ArrayList<Basket>();
         }
         else {
-            for (Basket b : basket){
-                total += (b.getItem().getPrice() * b.getAmount());
-            }
+            total = basket.stream().mapToDouble(e -> e.getAmount() * e.getItem().getPrice()).sum();
         }
         List<Categories> categories = itemService.getAllCategories();
         model.addAttribute("categories", categories);
@@ -177,6 +176,29 @@ public class HomeController {
 
 
         return "redirect:/basket";
+    }
+
+    @PostMapping(value = "/checkIn")
+    public String buyItems(HttpSession session){
+        List<Basket> items = (List<Basket>) session.getAttribute("basket");
+        Date date = new Date();
+        for(Basket b: items){
+            if (b.getItem().getAmount() < b.getAmount() && b.getItem().getAmount() > 0){
+                itemService.addOrder(new Orders(null, b.getItem(), b.getItem().getAmount(), b.getItem().getAmount() * b.getItem().getPrice(), date));
+                b.getItem().setAmount(0);
+                itemService.saveItem(b.getItem());
+            }
+            else {
+                itemService.addOrder(new Orders(null, b.getItem(), b.getAmount(), b.getAmount() * b.getItem().getPrice(), date));
+
+                b.getItem().setAmount(b.getItem().getAmount() - b.getAmount());
+                itemService.saveItem(b.getItem());
+            }
+
+        }
+        session.removeAttribute("basket");
+
+        return "redirect:/";
     }
 
     @PostMapping(value = "/clearBasket")

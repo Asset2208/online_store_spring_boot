@@ -206,10 +206,16 @@
                             </div>
                         </div>
                     </div>
-                    <form th:action="@{'/add_to_basket'}" method="post" class="mt-2">
-                        <input type="hidden" name="item_id" th:value="${item.id}">
-                        <button class="btn btn-success" th:text="#{button.addBasket}"></button>
-                    </form>
+                    <div th:unless="${item.amount} == 0">
+                        <form th:action="@{'/add_to_basket'}" method="post" class="mt-2">
+                            <input type="hidden" name="item_id" th:value="${item.id}">
+                            <button class="btn btn-success" th:text="#{button.addBasket}"></button>
+                        </form>
+                    </div>
+                    <div th:unless="${item.amount} != 0" class="mt-5">
+                        <h5 class="text-danger" th:text="#{text.no_in_stock}"></h5>
+                    </div>
+
                 </div>
             </div>
         </div>

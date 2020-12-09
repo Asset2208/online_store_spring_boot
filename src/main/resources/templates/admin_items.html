@@ -35,6 +35,9 @@
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{'/admin_categories'}" th:text="#{topic.categories}"></a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/admin_orders'}" th:text="#{topic.orders}"></a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -71,7 +74,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label th:text="#{label.amount}"></label>
-                                            <input type="number" name="amount" class="form-control" th:placeholder="#{label.amount}">
+                                            <input type="number" name="amount" min="0" class="form-control" th:placeholder="#{label.amount}">
                                         </div>
                                         <div class="form-group">
                                             <label th:text="#{label.rating}"></label>

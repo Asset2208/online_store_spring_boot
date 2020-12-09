@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class AdminController {
@@ -76,6 +77,21 @@ public class AdminController {
         model.addAttribute("currentUser", getUserData());
 
         return "admin_items";
+    }
+    @GetMapping("/admin_orders")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
+    public String adminOrders(Model model) {
+        List<Orders> orders = itemService.getAllOrders();
+
+        double total = orders.stream().mapToDouble(Orders::getTotal_price).sum();
+
+        model.addAttribute("total", total);
+
+        model.addAttribute("orders", orders);
+
+        model.addAttribute("currentUser", getUserData());
+
+        return "admin_orders";
     }
 
     @GetMapping("/admin_items/{Id}")
