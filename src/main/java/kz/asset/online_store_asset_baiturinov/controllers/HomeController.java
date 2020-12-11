@@ -86,6 +86,8 @@ public class HomeController {
     @PostMapping("/add_to_basket")
     public String addToBasket(@RequestParam("item_id") Long id, HttpSession session){
         List<Basket> basket = (List<Basket>) session.getAttribute("basket");
+        Integer basket_size = (Integer) session.getAttribute("basket_size");
+
         if (basket == null) {
             basket = new ArrayList<>();
             session.setAttribute("basket", basket);
@@ -96,12 +98,26 @@ public class HomeController {
                 if (basket1.getItem().getId().equals(id)){
                     basket1.setAmount(basket1.getAmount() + 1);
                     session.setAttribute("basket", basket);
+                    if (basket_size == null){
+                        session.setAttribute("basket_size", 1);
+                    }
+                    else {
+                        session.setAttribute("basket_size", basket_size + 1);
+                    }
+
                     return "redirect:/item/" + id;
                 }
             }
         }
         basket.add(new Basket(item, 1));
         session.setAttribute("basket", basket);
+
+        if (basket_size == null){
+            session.setAttribute("basket_size", 1);
+        }
+        else {
+            session.setAttribute("basket_size", basket_size + 1);
+        }
 
         return "redirect:/item/" + id;
     }
@@ -124,8 +140,6 @@ public class HomeController {
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
 
-        model.addAttribute("currentUser", getUserData());
-
         model.addAttribute("total", total);
 
         model.addAttribute("baskets", basket);
@@ -137,14 +151,12 @@ public class HomeController {
     public String addQuantity(HttpSession session,
                               @RequestParam(name = "id") Long id){
         List<Basket> items = (List<Basket>) session.getAttribute("basket");
-
-        ShopItem item = itemService.getItem(id);
-        Basket basket = new Basket();
-
+        Integer basket_size = (Integer) session.getAttribute("basket_size");
         for(Basket b: items){
             if(b.getItem().getId().equals(id)){
                 b.setAmount(b.getAmount() + 1);
-                session.setAttribute("baskets", items);
+                session.setAttribute("basket_size", basket_size + 1);
+                session.setAttribute("basket", items);
                 return "redirect:/basket";
             }
         }
@@ -157,7 +169,7 @@ public class HomeController {
     public String removeQuantity(HttpSession session,
                               @RequestParam(name = "id") Long id){
         List<Basket> items = (List<Basket>) session.getAttribute("basket");
-
+        Integer basket_size = (Integer) session.getAttribute("basket_size");
         ShopItem item = itemService.getItem(id);
         Basket basket = new Basket();
 
@@ -169,7 +181,8 @@ public class HomeController {
                 else {
                     items.remove(b);
                 }
-                session.setAttribute("baskets", items);
+                session.setAttribute("basket_size", basket_size - 1);
+                session.setAttribute("basket", items);
                 return "redirect:/basket";
             }
         }
@@ -197,6 +210,7 @@ public class HomeController {
 
         }
         session.removeAttribute("basket");
+        session.setAttribute("basket_size", 0);
 
         return "redirect:/";
     }
@@ -204,7 +218,7 @@ public class HomeController {
     @PostMapping(value = "/clearBasket")
     public String clearBasket(HttpSession session){
         session.removeAttribute("basket");
-
+        session.setAttribute("basket_size", 0);
         return "redirect:/basket";
     }
 

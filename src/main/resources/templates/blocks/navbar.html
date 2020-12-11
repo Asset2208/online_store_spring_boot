@@ -20,8 +20,8 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{'/top'}" th:text="#{navbar.top}"></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{'/basket'}" th:text="#{navbar.basket} + '(' + ${session.basket.size()} + ')'" th:unless="${session.basket == null}"></a>
+                <li class="nav-item" th:unless="${session.basket == null}">
+                    <a class="nav-link" th:href="@{'/basket'}" th:text="#{navbar.basket} + '(' + ${session.basket_size} + ')'" ></a>
                 </li>
                 <li class="nav-item" sec:authorize="isAnonymous()">
                     <a class="nav-link" th:href="@{'/login'}" th:text="#{navbar.login}"></a>
