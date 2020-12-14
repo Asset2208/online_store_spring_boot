@@ -232,4 +232,27 @@ public class HomeController {
         return null;
     }
 
+    @PostMapping("/add_comment")
+    private String addComment(@RequestParam("item_id") Long item_id,
+                              @RequestParam("comment_text") String comment_text){
+        Users author = getUserData();
+        Date date = new Date();
+
+        ShopItem item = itemService.getItem(item_id);
+        if (item != null){
+            Comments comment = new Comments();
+            comment.setComment(comment_text);
+            comment.setAddedDate(date);
+            comment.setAuthor(author);
+            comment.setItem(item);
+
+            itemService.addComment(comment);
+            return "redirect:/item/" + item_id;
+        }
+        else {
+            return "redirect:/item/" + item_id + "?error";
+        }
+
+    }
+
 }

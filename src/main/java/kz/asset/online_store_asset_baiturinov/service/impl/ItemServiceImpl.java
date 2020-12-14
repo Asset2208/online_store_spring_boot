@@ -30,6 +30,9 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
     @Override
     public ShopItem addItem(ShopItem item) {
         return shopItemRepository.save(item);
@@ -238,5 +241,30 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Orders saveOrder(Orders order) {
         return orderRepository.save(order);
+    }
+
+    @Override
+    public Comments addComment(Comments comment) {
+        return commentRepository.save(comment);
+    }
+
+    @Override
+    public List<Comments> getAllComments() {
+        return commentRepository.findAll();
+    }
+
+    @Override
+    public Comments getComment(Long id) {
+        return commentRepository.getOne(id);
+    }
+
+    @Override
+    public void deleteComment(Comments comment) {
+        commentRepository.delete(comment);
+    }
+
+    @Override
+    public Comments saveComment(Comments comment) {
+        return commentRepository.save(comment);
     }
 }

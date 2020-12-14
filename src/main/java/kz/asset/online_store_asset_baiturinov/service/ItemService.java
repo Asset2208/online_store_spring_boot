@@ -57,4 +57,10 @@ public interface ItemService {
     void deleteOrder(Orders order);
     Orders saveOrder(Orders order);
 
+    Comments addComment(Comments comment);
+    List<Comments> getAllComments();
+    Comments getComment(Long id);
+    void deleteComment(Comments comment);
+    Comments saveComment(Comments comment);
+
 }
