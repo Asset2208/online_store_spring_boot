@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -324,5 +325,30 @@ public class UserController {
         }
         return "redirect:/admin_users/" + user_id + "?role_error_dismiss";
     }
+
+//    @PostMapping("/add_comment")
+//    @PreAuthorize("isAuthenticated()")
+//    private String addComment(@RequestParam("item_id") Long item_id,
+//                              @RequestParam("comment_text") String comment_text,
+//                              @RequestParam("user_id") Long user_id){
+//
+//        Date date = new Date();
+//        Users user = userService.getUserById(user_id);
+//        ShopItem item = itemService.getItem(item_id);
+//        if (item != null){
+//            Comments comment = new Comments();
+//            comment.setComment(comment_text);
+//            comment.setAddedDate(date);
+//            comment.setAuthor(user);
+//            comment.setItem(item);
+//
+//            itemService.addComment(comment);
+//            return "redirect:/item/" + item_id;
+//        }
+//        else {
+//            return "redirect:/item/" + item_id + "?error";
+//        }
+//
+//    }
 
 }

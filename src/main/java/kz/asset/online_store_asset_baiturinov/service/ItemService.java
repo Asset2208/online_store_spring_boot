@@ -62,5 +62,6 @@ public interface ItemService {
     Comments getComment(Long id);
     void deleteComment(Comments comment);
     Comments saveComment(Comments comment);
+    List<Comments> getCommentsByItemId(Long item_id);
 
 }

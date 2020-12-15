@@ -267,4 +267,9 @@ public class ItemServiceImpl implements ItemService {
     public Comments saveComment(Comments comment) {
         return commentRepository.save(comment);
     }
+
+    @Override
+    public List<Comments> getCommentsByItemId(Long item_id) {
+        return commentRepository.findAllByItemIdOrderByAddedDateDesc(item_id);
+    }
 }

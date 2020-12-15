@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main.html">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main.html" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div layout:fragment="site_content">
     <div class="row mt-5">
         <div class="col">
@@ -65,7 +65,7 @@
                 }
 
                 /* The Modal (background) */
-                .modal {
+                .modall {
                     display: none; /* Hidden by default */
                     position: fixed; /* Stay in place */
                     z-index: 1; /* Sit on top */
@@ -171,7 +171,7 @@
 
                                 </div>
 
-                                <div id="myModal" class="modal">
+                                <div id="myModal" class="modall">
                                     <span class="close">&times;</span>
                                     <img class="modal-content" id="img01">
                                     <div id="caption"></div>
@@ -216,6 +216,95 @@
                         <h5 class="text-danger" th:text="#{text.no_in_stock}"></h5>
                     </div>
 
+                    <hr class="my-4">
+
+                    <div sec:authorize="isAuthenticated()">
+                        <form th:action="@{'/add_comment'}" method="post">
+                            <input type="hidden" name="item_id" th:value="${item.id}">
+                            <div class="form-group">
+                                <textarea type="text" style="width: 100%;" name="comment_text" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary" th:text="#{button.addComment}"></button>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="alert alert-primary mb-5" role="alert" th:unless="${currentUser != null}" th:text="#{text.authorize_comment}">
+                    </div>
+
+                    <div class="card" th:each="comment : ${comments}">
+                        <div class="card-body ml-2 mr-2">
+                            <div class="row">
+                                <h5 th:text="${comment.author.fullName}"></h5>
+                                <small th:text="${comment.addedDate}" class="ml-auto"></small>
+                            </div>
+                            <div class="row mt-2">
+                                <p th:text="${comment.comment}"></p>
+                                <div sec:authorize="isAuthenticated()" th:if="${comment.author.id} == ${currentUser.id}" class="ml-auto">
+                                    <div class="row" style="margin-right: 0px;">
+                                        <button type="button" class="btn btn-primary ml-auto mr-2" data-toggle="modal" th:attr="data-target='#edit' + ${comment.id}" style="width: 38px;"><i class="fas fa-edit"></i>
+                                        </button>
+
+                                        <button type="button" class="btn btn-primary ml-auto" data-toggle="modal" th:attr="data-target='#delete' + ${comment.id}" style="background-color: red; height: 38px; width: 38px;"><i class="fas fa-trash-alt"></i>
+                                        </button>
+
+                                        <div class="modal fade" th:id="'edit' + ${comment.id}" tabindex="-1" th:attr="aria-labelledby='edit' + ${comment.id} + 'Label'" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form th:action="@{'/editComment'}" method="post">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" th:id="'edit' + ${comment.id} + 'Label'" th:text="#{h5.edit_comment}"></h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label th:text="#{label.comment}"></label>
+                                                                <input type="hidden" name="comment_id" th:value="${comment.id}">
+                                                                <input type="hidden" name="item_id" th:value="${item.id}">
+                                                                <textarea type="text" name="comment_text" class="form-control" th:text="${comment.comment}" required></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{button.cancel}"></button>
+                                                            <button class="btn btn-primary" th:text="#{button.edit}" ></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal fade" th:id="'delete' + ${comment.id}" tabindex="-1" th:attr="aria-labelledby='delete' + ${comment.id} + 'Label'" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form th:action="@{'/deleteComment'}" method="post">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" th:id="'delete' + ${comment.id} + 'Label'" th:text="#{message.confirm}"></h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <input type="hidden" name="item_id" th:value="${item.id}">
+                                                                <input type="hidden" name="comment_id" th:value="${comment.id}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{button.cancel}"></button>
+                                                            <button class="btn btn-info btn-sm ml-3" style="background-color: red; font-weight: bold;" th:text="#{button.delete}"></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

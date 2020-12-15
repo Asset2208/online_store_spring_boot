@@ -222,6 +222,49 @@ public class HomeController {
         return "redirect:/basket";
     }
 
+
+
+    @PostMapping(value = "/add_comment")
+    @PreAuthorize("isAuthenticated()")
+    public String addComment(@RequestParam(name = "item_id") Long item_id,
+                              @RequestParam(name = "comment_text") String comment_text, HttpSession session){
+
+        Users user = getUserData();
+
+        Date date = new Date();
+        ShopItem item = itemService.getItem(item_id);
+        if (item != null){
+            Comments comment = new Comments(null, comment_text, date, item, user);
+            itemService.addComment(comment);
+
+            return "redirect:/item/" + item_id;
+        }
+        else {
+            return "redirect:/item/" + item_id + "?error";
+        }
+
+    }
+
+    @PostMapping(value = "/editComment")
+    @PreAuthorize("isAuthenticated()")
+    public String editComment(@RequestParam(name = "comment_id") Long comment_id,
+                              @RequestParam(name = "comment_text") String comment_text,
+                              @RequestParam(name = "item_id") Long item_id){
+        Comments comment = itemService.getComment(comment_id);
+        comment.setComment(comment_text);
+        itemService.saveComment(comment);
+        return "redirect:/item/" + item_id;
+    }
+
+    @PostMapping(value = "/deleteComment")
+    @PreAuthorize("isAuthenticated()")
+    public String deleteComment(@RequestParam(name = "comment_id") Long comment_id,
+                                @RequestParam(name = "item_id") Long item_id){
+        Comments comment = itemService.getComment(comment_id);
+        itemService.deleteComment(comment);
+        return "redirect:/item/" + item_id;
+    }
+
     private Users getUserData(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)){
@@ -231,28 +274,4 @@ public class HomeController {
         }
         return null;
     }
-
-    @PostMapping("/add_comment")
-    private String addComment(@RequestParam("item_id") Long item_id,
-                              @RequestParam("comment_text") String comment_text){
-        Users author = getUserData();
-        Date date = new Date();
-
-        ShopItem item = itemService.getItem(item_id);
-        if (item != null){
-            Comments comment = new Comments();
-            comment.setComment(comment_text);
-            comment.setAddedDate(date);
-            comment.setAuthor(author);
-            comment.setItem(item);
-
-            itemService.addComment(comment);
-            return "redirect:/item/" + item_id;
-        }
-        else {
-            return "redirect:/item/" + item_id + "?error";
-        }
-
-    }
-
 }

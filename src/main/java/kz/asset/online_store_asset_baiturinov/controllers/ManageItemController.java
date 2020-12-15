@@ -3,6 +3,7 @@ package kz.asset.online_store_asset_baiturinov.controllers;
 import kz.asset.online_store_asset_baiturinov.models.*;
 import kz.asset.online_store_asset_baiturinov.repo.ShopItemRepository;
 import kz.asset.online_store_asset_baiturinov.service.ItemService;
+import kz.asset.online_store_asset_baiturinov.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +38,9 @@ public class ManageItemController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private UserService userService;
 
     @Value("${file.item_photo.viewPath}")
     private String viewPath;
@@ -143,7 +151,11 @@ public class ManageItemController {
         }
         model.addAttribute("pictures", pictures);
 
+        List<Comments> comments = itemService.getCommentsByItemId(id);
 
+        model.addAttribute("comments", comments);
+
+        model.addAttribute("currentUser", getUserData());
 
         List<Brands> brands = itemService.getAllBrands();
         model.addAttribute("brands", brands);
@@ -291,6 +303,16 @@ public class ManageItemController {
 
         return "redirect:/";
 
+    }
+
+    private Users getUserData(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)){
+            User secUser = (User)authentication.getPrincipal();
+            Users myUser = userService.getUserByEmail(secUser.getUsername());
+            return myUser;
+        }
+        return null;
     }
 
 }
