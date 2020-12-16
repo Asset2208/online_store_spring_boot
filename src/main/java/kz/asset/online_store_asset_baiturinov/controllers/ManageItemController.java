@@ -155,6 +155,15 @@ public class ManageItemController {
 
         model.addAttribute("comments", comments);
 
+        Users user = getUserData();
+        if (user != null){
+            if (user.getRoles().contains(userService.getRole(2L)) || user.getRoles().contains(userService.getRole(3L)))
+                model.addAttribute("is_editor", true);
+        }
+        else {
+            model.addAttribute("is_editor", false);
+        }
+
         model.addAttribute("currentUser", getUserData());
 
         List<Brands> brands = itemService.getAllBrands();

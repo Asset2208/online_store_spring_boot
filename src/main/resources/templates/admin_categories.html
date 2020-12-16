@@ -104,7 +104,7 @@
                                 <div class="modal-content">
                                     <form th:action="@{'/editCategory'}" method="post">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" th:id="'edit' + ${category.id} + 'Label'">Edit publication</h5>
+                                            <h5 class="modal-title" th:id="'edit' + ${category.id} + 'Label'" th:text="#{h5.edit_category}"></h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>

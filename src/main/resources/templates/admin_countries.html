@@ -54,7 +54,7 @@
                             <div class="modal-content">
                                 <form th:action="@{'/addCountry'}" method="post">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Add new publication</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel" th:text="#{h5.newcountry}"></h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -104,7 +104,7 @@
                                 <div class="modal-content">
                                     <form th:action="@{'/editCountry'}" method="post">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" th:id="'edit' + ${country.id} + 'Label'">Edit publication</h5>
+                                            <h5 class="modal-title" th:id="'edit' + ${country.id} + 'Label'" th:text="#{h5.edit_country}"></h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
