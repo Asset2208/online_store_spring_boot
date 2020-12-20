@@ -73,7 +73,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight: bold;" th:text="#{button.cancel}"></button>
-                                        <button class="btn btn-success" style="background-color: #2bc170;"  th:text="#{button.addItem}"></button>
+                                        <button class="btn btn-success" style="background-color: #2bc170;"  th:text="#{button.add}"></button>
                                     </div>
                                 </form>
                             </div>
@@ -133,7 +133,7 @@
                                 </div>
                             </div>
 
-                            <form action="/deleteBrand" method="post">
+                            <form th:action="@{'/deleteBrand'}" method="post">
                                 <input type="hidden" name="brand_id" th:value="${brand.id}">
                                 <button class="btn btn-info btn-sm ml-3" style="background-color: red; font-weight: bold;" th:text="#{button.delete}"></button>
                             </form>

@@ -129,7 +129,7 @@
                             </div>
                         </div>
 
-                        <form action="/deleteCategory" method="post">
+                        <form th:action="@{'/deleteCategory'}" method="post">
                             <input type="hidden" name="category_id" th:value="${category.id}">
                             <button class="btn btn-info btn-sm ml-3" style="background-color: red; font-weight: bold;" th:text="#{button.delete}"></button>
                         </form>
