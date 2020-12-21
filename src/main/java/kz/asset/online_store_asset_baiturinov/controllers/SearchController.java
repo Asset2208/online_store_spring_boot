@@ -40,7 +40,7 @@ public class SearchController {
     }
 
     @GetMapping("/search")
-    public String simpleSearch(Model model, @RequestParam(name = "search_result") String result){
+    public String simpleSearch(Model model, @RequestParam(name = "search_result", defaultValue = "") String result){
         ArrayList<ShopItem> shopItems = itemService.getAllItemsByNameLikeOrderByPriceAsc(result);
         model.addAttribute("items", shopItems);
         model.addAttribute("search_item", result);

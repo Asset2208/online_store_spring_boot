@@ -7,14 +7,14 @@
                 <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.categories}">
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item" th:each="category : ${categories}"><img th:src="${category.logoURL}" style="min-height: 20px; max-width: 20px;"> <a th:href="@{'/searchcategory/' + ${category.id}}" style="font-weight: bold;" th:text="${category.name}"></a></li>
+                    <li class="list-group-item" th:each="category : ${categories}"><img th:src="${category.logoURL}" style="min-height: 20px; max-width: 20px;"> <a class="text-decoration-none" th:href="@{'/searchcategory/' + ${category.id}}" style="font-weight: bold;" th:text="${category.name}"></a></li>
                 </ul>
             </div>
             <div class="card mt-2">
                 <div class="card-header" style="background-color: #0b7e3e; color: white; font-weight: bold;" th:text="#{topic.brands}">
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item" th:each="brand_nav : ${brands}"><a th:href="@{'/searchbrand/' + ${brand_nav.id}}" style="font-weight: bold;" th:text="${brand_nav.name}"></a></li>
+                    <li class="list-group-item" th:each="brand_nav : ${brands}"><a class="text-decoration-none" th:href="@{'/searchbrand/' + ${brand_nav.id}}" style="font-weight: bold;" th:text="${brand_nav.name}"></a></li>
                 </ul>
             </div>
             <div class="card mt-2">
@@ -30,7 +30,6 @@
                         <i class="fab fa-cc-amazon-pay fa-3x"></i>
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="col-9 mb-5">
@@ -206,10 +205,10 @@
                             </div>
                         </div>
                     </div>
-                    <div th:unless="${item.amount} == 0">
+                    <div th:unless="${item.amount} == 0" class="mt-3">
                         <form th:action="@{'/add_to_basket'}" method="post" class="mt-2">
                             <input type="hidden" name="item_id" th:value="${item.id}">
-                            <button class="btn btn-success" th:text="#{button.addBasket}"></button>
+                            <button class="btn btn-success"><i class="fas fa-shopping-cart"></i> <span th:text="#{button.addBasket}"></span></button>
                         </form>
                     </div>
                     <div th:unless="${item.amount} != 0" class="mt-5">
@@ -224,12 +223,14 @@
                             <div class="form-group">
                                 <textarea type="text" style="width: 100%;" name="comment_text" class="form-control"></textarea>
                             </div>
-                            <div class="form-group">
-                                <button class="btn btn-primary" th:text="#{button.addComment}"></button>
+                            <div class="text-right">
+                                <button class="btn btn-primary"><i class="fas fa-comments"></i> <span th:text="#{button.addComment}"></span></button>
                             </div>
-
                         </form>
                     </div>
+
+                    <hr class="my-4">
+
                     <div class="alert alert-primary mb-5" role="alert" th:unless="${currentUser != null}" th:text="#{text.authorize_comment}">
                     </div>
 
@@ -237,10 +238,10 @@
                         <div class="card-body ml-2 mr-2">
                             <div class="row">
                                 <h5 th:text="${comment.author.fullName}"></h5>
-                                <small th:text="${#dates.format(comment.addedDate, 'dd-MM-yyyy HH:mm')}" class="ml-auto"></small>
+                                <small th:text="${#dates.format(comment.addedDate, 'dd.MM.yyyy HH:mm')}" class="ml-auto"></small>
                             </div>
-                            <div class="row mt-2">
-                                <p th:text="${comment.comment}"></p>
+                            <div class="row">
+                                <p th:text="${comment.comment}" class="mb-0 pt-2"></p>
                                 <div sec:authorize="isAuthenticated()" th:if="${comment.author.id} == ${currentUser.id}" class="ml-auto">
                                     <div class="row" style="margin-right: 0px;">
                                         <button type="button" class="btn btn-primary ml-auto mr-2" data-toggle="modal" th:attr="data-target='#edit' + ${comment.id}" style="width: 38px;"><i class="fas fa-edit"></i>
